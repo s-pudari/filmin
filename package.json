@@ -1,0 +1,17 @@
+{
+  "name": "filmin-workspace",
+  "version": "1.0.0",
+  "description": "Filmin - Talent Meets Cinema (MVP v1.0)",
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix frontend install",
+    "server": "npm --prefix server run dev",
+    "frontend": "npm --prefix frontend run dev",
+    "dev": "concurrently \"npm run server\" \"npm run frontend\"",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:server": "npm --prefix server run build",
+    "test:e2e": "python test_e2e.py"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
