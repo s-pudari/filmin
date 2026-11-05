@@ -35,10 +35,11 @@ const MainApp: React.FC = () => {
   const handleSelectOpportunity = (opp: Opportunity) => {
     setSelectedOpportunityId(opp.id);
     setCurrentPage('opportunity-detail');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-cinema-950 text-slate-100">
+    <div className="min-h-screen flex flex-col bg-[#050508] text-slate-100 font-sans selection:bg-amber-500 selection:text-black">
       <DemoAccountBar />
       <Navbar currentPage={currentPage} onNavigate={handleNavigate} />
 

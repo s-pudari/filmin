@@ -3,14 +3,30 @@ import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { api } from '../services/api';
 import { PortfolioLink, ApiError } from '../types';
-import { User, Plus, Trash2, ExternalLink, Save, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import {
+  User,
+  Plus,
+  Trash2,
+  ExternalLink,
+  Save,
+  ShieldCheck,
+  CheckCircle2,
+  Film,
+  Video,
+  Award,
+  Sparkles,
+  Link as LinkIcon,
+  MapPin,
+  Clock,
+  Briefcase
+} from 'lucide-react';
 
 export const ProfilePage: React.FC = () => {
   const { user, profile, refreshProfile } = useAuth();
   const { showToast } = useNotification();
 
   const [displayName, setDisplayName] = useState('');
-  const [primaryRole, setPrimaryRole] = useState('Actor');
+  const [primaryRole, setPrimaryRole] = useState('Video Editor');
   const [skills, setSkills] = useState('');
   const [location, setLocation] = useState('');
   const [bio, setBio] = useState('');
@@ -25,7 +41,7 @@ export const ProfilePage: React.FC = () => {
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.displayName || '');
-      setPrimaryRole(profile.primaryRole || 'Actor');
+      setPrimaryRole(profile.primaryRole || 'Video Editor');
       setSkills(profile.skills || '');
       setLocation(profile.location || '');
       setBio(profile.bio || '');
@@ -57,7 +73,7 @@ export const ProfilePage: React.FC = () => {
 
     setPortfolioLinks(prev => [
       ...prev,
-      { label: newLinkLabel.trim() || 'Portfolio Reel', url: newLinkUrl.trim() }
+      { label: newLinkLabel.trim() || 'Showreel / Proof-of-Work', url: newLinkUrl.trim() }
     ]);
     setNewLinkLabel('');
     setNewLinkUrl('');
@@ -95,205 +111,314 @@ export const ProfilePage: React.FC = () => {
       });
 
       await refreshProfile();
-      showToast('Profile updated successfully!', 'success', 'Profile Saved');
+      showToast('Creator profile updated successfully!', 'success', 'Profile Saved');
     } catch (err: any) {
       const apiErr = err as ApiError;
-      if (apiErr.fieldErrors) setFieldErrors(apiErr.fieldErrors);
+      if (apiErr.fieldErrors) {
+        setFieldErrors(apiErr.fieldErrors);
+      }
       showToast(apiErr.message || 'Failed to update profile.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
+  // Helper to format platform badge
+  const getPlatformIcon = (url: string) => {
+    const u = url.toLowerCase();
+    if (u.includes('youtube')) return 'YouTube Reel';
+    if (u.includes('vimeo')) return 'Vimeo Cut';
+    if (u.includes('imdb')) return 'IMDb Verified';
+    if (u.includes('fueler')) return 'Fueler Proof';
+    if (u.includes('behance')) return 'Behance Portfolio';
+    if (u.includes('drive.google')) return 'Google Drive Media';
+    return 'External Reel';
+  };
+
+  const roleOptions = [
+    'Video Editor',
+    'Cinematographer',
+    'Lead Actress',
+    'Lead Actor',
+    'Feature Director',
+    'Screenwriter',
+    'Sound Designer',
+    'Music Composer',
+    'Colorist & Finishing Artist',
+    'Producer'
+  ];
+
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-      <div className="pb-4 border-b border-cinema-800">
-        <h1 className="text-2xl font-bold font-serif text-white">Professional Profile</h1>
-        <p className="text-xs text-slate-400 mt-1">
-          Directors and casting agents review this information when assessing your applications
-        </p>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      {/* Profile Header Hero */}
+      <div className="relative rounded-[32px] bg-gradient-to-r from-[#11131e] via-[#0c0d15] to-[#07080d] border border-white/[0.1] p-8 sm:p-12 overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-400 via-amber-500 to-amber-600 p-1 shadow-[0_0_30px_rgba(245,158,11,0.3)]">
+              <div className="w-full h-full bg-[#07080c] rounded-[22px] flex items-center justify-center text-3xl font-extrabold font-display text-white">
+                {(displayName || 'C').charAt(0).toUpperCase()}
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-extrabold font-display text-white">
+                  {displayName || 'Film Professional'}
+                </h1>
+                <span className="p-1 rounded-full bg-amber-400/10 text-amber-400 border border-amber-400/30">
+                  <ShieldCheck className="w-4 h-4" />
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-zinc-400">
+                <span className="text-amber-400 font-bold bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/20">
+                  {primaryRole}
+                </span>
+                <span>•</span>
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                  {experienceYears} Years Experience
+                </span>
+                {location && (
+                  <>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-zinc-500" />
+                      {location}
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 self-start sm:self-auto">
+            <div className="px-4 py-2 rounded-2xl bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300">
+              <span className="text-emerald-400 font-bold">100%</span> Verified Portfolio
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="bg-cinema-900 border border-cinema-800 rounded-3xl p-6 sm:p-10 shadow-xl">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Display Name & Role */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Profile Form & Portfolio Grid */}
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left 2 Columns: Professional Information */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="glass-card rounded-3xl p-8 space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+              <div>
+                <h2 className="text-xl font-bold font-display text-white">Creator Bio & Background</h2>
+                <p className="text-xs text-zinc-400 mt-1">Information visible to directors when reviewing your submissions</p>
+              </div>
+              <Sparkles className="w-5 h-5 text-amber-400" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {/* Display Name */}
+              <div>
+                <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+                  Professional / Screen Name *
+                </label>
+                <input
+                  type="text"
+                  value={displayName}
+                  onChange={e => setDisplayName(e.target.value)}
+                  placeholder="e.g. Aditi Rao"
+                  className={`w-full bg-[#07080c] border rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition ${
+                    fieldErrors.displayName ? 'border-rose-500 focus:border-rose-400' : 'border-white/10 focus:border-amber-400'
+                  }`}
+                />
+                {fieldErrors.displayName && (
+                  <p className="text-[11px] font-mono text-rose-400 mt-1">{fieldErrors.displayName}</p>
+                )}
+              </div>
+
+              {/* Primary Role */}
+              <div>
+                <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+                  Primary Specialization *
+                </label>
+                <select
+                  value={primaryRole}
+                  onChange={e => setPrimaryRole(e.target.value)}
+                  className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none transition"
+                >
+                  {roleOptions.map(r => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+                  Base Location
+                </label>
+                <input
+                  type="text"
+                  value={location}
+                  onChange={e => setLocation(e.target.value)}
+                  placeholder="e.g. Mumbai / Bangalore / Remote"
+                  className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition"
+                />
+              </div>
+
+              {/* Experience Years */}
+              <div>
+                <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+                  Years of Industry Experience
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="60"
+                  value={experienceYears}
+                  onChange={e => setExperienceYears(parseInt(e.target.value, 10) || 0)}
+                  className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition"
+                />
+              </div>
+            </div>
+
+            {/* Skills */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Full Display Name / Screen Name <span className="text-rose-400">*</span>
+              <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+                Core Skills & Tools (Comma separated)
               </label>
               <input
                 type="text"
-                value={displayName}
-                onChange={e => setDisplayName(e.target.value)}
-                placeholder="e.g. Aditi Rao"
-                className={`w-full bg-cinema-950 border ${
-                  fieldErrors.displayName ? 'border-rose-500' : 'border-cinema-800 focus:border-cinema-gold'
-                } rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition`}
+                value={skills}
+                onChange={e => setSkills(e.target.value)}
+                placeholder="e.g. DaVinci Resolve, Premiere Pro, Color Grading, Sound Design, Method Acting"
+                className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition"
               />
-              {fieldErrors.displayName && (
-                <p className="text-xs text-rose-400 mt-1">{fieldErrors.displayName}</p>
+              <p className="text-[11px] font-mono text-zinc-500 mt-1.5">
+                Tip: Directors filter candidates based on specific NLE suites and equipment expertise.
+              </p>
+            </div>
+
+            {/* Bio */}
+            <div>
+              <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+                Filmmaker / Artist Statement & Bio
+              </label>
+              <textarea
+                value={bio}
+                onChange={e => setBio(e.target.value)}
+                rows={4}
+                placeholder="Briefly highlight your cinematic background, notable films/commercials worked on, and narrative sensibilities..."
+                className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl p-4 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition font-sans"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Right 1 Column: Proof-of-Work Showreels & Save */}
+        <div className="space-y-6">
+          <div className="glass-card rounded-3xl p-7 space-y-6 border border-white/10">
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+              <div>
+                <h3 className="text-lg font-bold font-display text-white">Showreel Proof-of-Work</h3>
+                <p className="text-xs text-zinc-400">Vimeo, YouTube, IMDb, Fueler links</p>
+              </div>
+              <Video className="w-5 h-5 text-amber-400" />
+            </div>
+
+            {/* Existing links list */}
+            <div className="space-y-3">
+              {portfolioLinks.length === 0 ? (
+                <div className="p-4 rounded-2xl bg-white/[0.02] border border-dashed border-white/10 text-center text-xs text-zinc-500">
+                  No showreels linked yet. Add your Vimeo or YouTube cuts below.
+                </div>
+              ) : (
+                portfolioLinks.map((link, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-amber-400/30 flex items-center justify-between gap-3 transition"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold font-display text-white truncate">
+                          {link.label}
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-amber-400/10 text-amber-400 border border-amber-400/20 shrink-0">
+                          {getPlatformIcon(link.url)}
+                        </span>
+                      </div>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[11px] font-mono text-zinc-400 hover:text-amber-300 truncate flex items-center gap-1 mt-0.5"
+                      >
+                        <span className="truncate">{link.url}</span>
+                        <ExternalLink className="w-3 h-3 shrink-0" />
+                      </a>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveLink(idx)}
+                      className="p-1.5 rounded-xl text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                      title="Remove Reel Link"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))
               )}
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Primary Cinema Role <span className="text-rose-400">*</span>
-              </label>
-              <select
-                value={primaryRole}
-                onChange={e => setPrimaryRole(e.target.value)}
-                className="w-full bg-cinema-950 border border-cinema-800 focus:border-cinema-gold rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition"
-              >
-                <option value="Lead Actress">Lead Actress</option>
-                <option value="Lead Actor">Lead Actor</option>
-                <option value="Supporting Actor">Supporting Actor</option>
-                <option value="Director & Producer">Director & Producer</option>
-                <option value="Cinematographer & Drone Op">Cinematographer & Drone Op</option>
-                <option value="Video Editor">Video Editor</option>
-                <option value="Camera Assistant">Camera Assistant / 1st AC</option>
-                <option value="Screenwriter">Screenwriter</option>
-                <option value="Music Composer">Music Composer</option>
-                <option value="Sound Designer">Sound Designer</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Location & Experience */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Location / Base City
-              </label>
+            {/* Add new link fields */}
+            <div className="pt-3 border-t border-white/[0.08] space-y-3">
+              <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold">
+                Attach New Media Link
+              </div>
               <input
                 type="text"
-                value={location}
-                onChange={e => setLocation(e.target.value)}
-                placeholder="e.g. Mumbai, India"
-                className="w-full bg-cinema-950 border border-cinema-800 focus:border-cinema-gold rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Years of Industry Experience
-              </label>
-              <input
-                type="number"
-                min="0"
-                value={experienceYears}
-                onChange={e => setExperienceYears(parseInt(e.target.value || '0', 10))}
-                className="w-full bg-cinema-950 border border-cinema-800 focus:border-cinema-gold rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition"
-              />
-            </div>
-          </div>
-
-          {/* Skills */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Skills, Dialects & Equipment Mastery <span className="text-slate-500">(Comma separated)</span>
-            </label>
-            <input
-              type="text"
-              value={skills}
-              onChange={e => setSkills(e.target.value)}
-              placeholder="e.g. Method Acting, Classical Dance, Hindi, ARRI Alexa, DaVinci Resolve"
-              className="w-full bg-cinema-950 border border-cinema-800 focus:border-cinema-gold rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition"
-            />
-          </div>
-
-          {/* Bio */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Professional Biography / Filmography Background
-            </label>
-            <textarea
-              value={bio}
-              onChange={e => setBio(e.target.value)}
-              placeholder="Graduate of FTII, National School of Drama, or notable credits..."
-              rows={4}
-              className="w-full bg-cinema-950 border border-cinema-800 focus:border-cinema-gold rounded-xl p-3 text-sm text-white focus:outline-none transition"
-            />
-          </div>
-
-          {/* Portfolio Links (PRD Section 4 & 9) */}
-          <div className="space-y-3 pt-2">
-            <label className="block text-xs font-semibold text-slate-300">
-              Verified External Portfolio & Reel URLs <span className="text-slate-500">(IMDb, Vimeo, Showreel)</span>
-            </label>
-
-            <div className="space-y-2">
-              {portfolioLinks.map((link, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between p-3 rounded-xl bg-cinema-850 border border-cinema-800 text-xs"
-                >
-                  <div className="flex items-center gap-2 truncate">
-                    <span className="font-bold text-cinema-gold">{link.label}:</span>
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-slate-300 hover:text-white truncate underline"
-                    >
-                      {link.url}
-                    </a>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveLink(idx)}
-                    className="p-1 rounded text-slate-400 hover:text-rose-400 transition"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            {/* Add new link input */}
-            <div className="flex flex-col sm:flex-row gap-2 pt-2">
-              <input
-                type="text"
-                placeholder="Platform (e.g. IMDb, Showreel)"
                 value={newLinkLabel}
                 onChange={e => setNewLinkLabel(e.target.value)}
-                className="bg-cinema-950 border border-cinema-800 rounded-xl px-3 py-2 text-xs text-white sm:w-44 focus:outline-none focus:border-cinema-gold"
+                placeholder="Label (e.g. 2026 Showreel Cut)"
+                className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none"
               />
               <input
                 type="url"
-                placeholder="https://vimeo.com/your-reel"
                 value={newLinkUrl}
                 onChange={e => setNewLinkUrl(e.target.value)}
-                className="flex-1 bg-cinema-950 border border-cinema-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cinema-gold"
+                placeholder="https://vimeo.com/... or https://youtube.com/..."
+                className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono"
               />
               <button
                 type="button"
                 onClick={handleAddLink}
-                className="px-4 py-2 rounded-xl bg-cinema-800 hover:bg-cinema-750 text-cinema-gold text-xs font-bold transition flex items-center justify-center gap-1 shrink-0"
+                className="w-full py-2.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.09] border border-white/10 text-xs font-display font-semibold text-white flex items-center justify-center gap-1.5 transition"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Add Link</span>
+                <Plus className="w-3.5 h-3.5 text-amber-400" />
+                <span>Add Showreel Link</span>
+              </button>
+            </div>
+
+            {/* Save Button */}
+            <div className="pt-4 border-t border-white/[0.08]">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-4 rounded-2xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {loading ? (
+                  <span>Saving Changes...</span>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    <span>Save Creator Profile</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
-
-          <div className="pt-4 border-t border-cinema-800 flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-xs text-slate-400">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Visible to opportunity creators</span>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-6 py-2.5 rounded-xl text-xs font-bold bg-cinema-gold hover:bg-amber-400 text-cinema-950 transition flex items-center gap-1.5 shadow-md shadow-amber-950/30 disabled:opacity-50"
-            >
-              <Save className="w-3.5 h-3.5" />
-              <span>{loading ? 'Saving...' : 'Save Profile'}</span>
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 };

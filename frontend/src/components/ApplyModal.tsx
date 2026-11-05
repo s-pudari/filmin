@@ -3,7 +3,7 @@ import { Opportunity, ApiError } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { api } from '../services/api';
-import { X, Send, AlertCircle, CheckCircle2, UserCheck } from 'lucide-react';
+import { X, Send, AlertCircle, CheckCircle2, UserCheck, Sparkles, ExternalLink } from 'lucide-react';
 
 interface ApplyModalProps {
   opportunity: Opportunity;
@@ -38,7 +38,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
 
     try {
       await api.submitApplication(opportunity.id, coverMessage);
-      showToast('Your application was submitted successfully!', 'success', 'Application Sent');
+      showToast('Your audition / application was submitted successfully!', 'success', 'Application Sent');
       onSuccess();
       onClose();
     } catch (err: any) {
@@ -51,114 +51,133 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-cinema-900 border border-cinema-750 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-in fade-in duration-200">
+      <div className="bg-[#0b0c13] border border-white/[0.12] rounded-3xl max-w-lg w-full p-7 sm:p-8 shadow-2xl relative overflow-hidden">
+        {/* Top edge light */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+        <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-cinema-800 transition"
+          className="absolute top-5 right-5 p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.08] transition"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <h3 className="text-xl font-bold font-serif text-white mb-1">
-          Apply for {opportunity.roleNeeded}
-        </h3>
-        <p className="text-sm text-slate-400 mb-6 truncate">
-          Project: <strong className="text-slate-200">{opportunity.title}</strong>
-        </p>
+        {/* Modal Header */}
+        <div className="mb-6">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px] font-mono font-semibold mb-3">
+            <Sparkles className="w-3 h-3" />
+            <span>Audition & Submission</span>
+          </div>
+          <h3 className="text-2xl font-extrabold font-display text-white mb-1">
+            Apply for {opportunity.roleNeeded}
+          </h3>
+          <p className="text-xs sm:text-sm text-zinc-400 truncate">
+            Production: <strong className="text-zinc-200">{opportunity.title}</strong>
+          </p>
+        </div>
 
         {isCreator ? (
-          <div className="p-4 rounded-xl bg-amber-950/60 border border-amber-800/60 text-amber-200 text-sm flex items-start gap-3 mb-4">
+          <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs sm:text-sm flex items-start gap-3.5 mb-4">
             <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold mb-1">Self-Application Not Permitted</p>
-              <p className="text-xs text-amber-300">
-                You created this opportunity listing. As the producer/director, you review applications rather than apply.
+              <p className="font-bold text-white mb-1 font-display">Creator Rule Active</p>
+              <p className="text-xs text-amber-300 leading-relaxed font-sans">
+                You created this production listing. As the director/producer, you review applicant submissions rather than applying to your own call.
               </p>
             </div>
           </div>
         ) : isProfileIncomplete ? (
-          <div className="p-4 rounded-xl bg-sky-950/60 border border-sky-800/60 text-sky-200 text-sm flex items-start gap-3 mb-4">
-            <UserCheck className="w-5 h-5 text-sky-400 shrink-0 mt-0.5" />
+          <div className="p-5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-200 text-xs sm:text-sm flex items-start gap-3.5 mb-4">
+            <UserCheck className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold mb-1">Profile Completion Required</p>
-              <p className="text-xs text-sky-300 mb-3">
-                Directors review your verified profile (roles, skills, portfolio links) when evaluating submissions.
+              <p className="font-bold text-white mb-1 font-display">Profile Verification Required</p>
+              <p className="text-xs text-cyan-300 leading-relaxed font-sans mb-3">
+                Directors evaluate verified portfolios (showreel links, IMDb credits, experience years) when reviewing applicants.
               </p>
               <button
                 onClick={() => {
                   onClose();
                   onNavigateToProfile();
                 }}
-                className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs transition"
+                className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold font-display text-xs transition"
               >
-                Complete Profile Now
+                Complete Profile Showreel
               </button>
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Applicant Profile preview card */}
-            <div className="p-3.5 rounded-xl bg-cinema-850 border border-cinema-800 text-xs">
-              <div className="text-slate-400 mb-1">Applying as:</div>
-              <div className="flex items-center justify-between">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Applicant Profile Card Preview */}
+            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-between text-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-600 text-black flex items-center justify-center font-bold text-xs shadow-sm">
+                  {profile?.displayName?.charAt(0).toUpperCase()}
+                </div>
                 <div>
-                  <span className="font-bold text-white text-sm">{profile?.displayName}</span>
-                  <span className="text-cinema-gold ml-2">({profile?.primaryRole})</span>
+                  <div className="font-bold text-white font-display text-sm">{profile?.displayName}</div>
+                  <div className="text-[11px] font-mono text-zinc-400">
+                    {profile?.primaryRole} · {profile?.experienceYears || 0} yrs exp
+                  </div>
                 </div>
-                <span className="text-slate-400">{profile?.experienceYears} yrs exp</span>
               </div>
-              {profile?.skills && (
-                <div className="text-slate-400 mt-1 truncate">
-                  <span className="text-slate-500">Skills:</span> {profile.skills}
-                </div>
-              )}
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onNavigateToProfile();
+                }}
+                className="text-amber-400 hover:text-amber-300 text-xs font-mono underline"
+              >
+                Edit Reel
+              </button>
             </div>
 
-            {/* Cover message */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Cover Message / Statement of Interest <span className="text-slate-500">(Optional)</span>
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-semibold font-display text-zinc-300">
+                  Audition Note / Cover Message
+                </label>
+                <span className="text-[11px] font-mono text-zinc-500">
+                  {coverMessage.length}/500
+                </span>
+              </div>
               <textarea
                 value={coverMessage}
-                onChange={e => setCoverMessage(e.target.value)}
-                placeholder="Highlight relevant projects, reel links, or why you're passionate about this script..."
+                onChange={e => setCoverMessage(e.target.value.slice(0, 500))}
                 rows={4}
-                maxLength={2000}
-                className="w-full bg-cinema-950 border border-cinema-800 focus:border-cinema-gold rounded-xl p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition resize-none"
+                placeholder="Describe your fit for this role, relevant projects, showreel timestamps, or scheduling availability..."
+                className="w-full bg-[#07080c] border border-white/10 rounded-2xl p-4 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 transition resize-none font-sans"
               />
-              <div className="text-right text-[11px] text-slate-500 mt-1">
-                {coverMessage.length} / 2000
-              </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-800/80 text-rose-200 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
-            <div className="flex items-center justify-end gap-3 pt-3 border-t border-cinema-800">
+            <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition"
+                className="px-5 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 text-xs font-display font-semibold transition"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-cinema-gold hover:bg-amber-400 text-cinema-950 transition flex items-center gap-1.5 shadow-md shadow-amber-950/30 disabled:opacity-50"
+                className="px-7 py-3 rounded-xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider flex items-center gap-2 disabled:opacity-50"
               >
                 {loading ? (
                   <span>Submitting...</span>
                 ) : (
                   <>
                     <Send className="w-3.5 h-3.5" />
-                    <span>Submit Application</span>
+                    <span>Send Submission</span>
                   </>
                 )}
               </button>

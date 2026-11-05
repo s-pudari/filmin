@@ -15,7 +15,11 @@ import {
   ShieldAlert,
   Calendar,
   MessageSquare,
-  Award
+  Award,
+  Video,
+  Sparkles,
+  MapPin,
+  CheckCircle2
 } from 'lucide-react';
 
 interface ApplicantReviewPageProps {
@@ -35,6 +39,7 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
   const [loading, setLoading] = useState(true);
   const [forbiddenError, setForbiddenError] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
 
   const fetchApplications = async () => {
     setLoading(true);
@@ -47,7 +52,7 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
       setApplications(apps);
     } catch (err: any) {
       if (err.code === 'FORBIDDEN' || err.code === 'HTTP_403') {
-        setForbiddenError('Access Denied: Only the opportunity creator can review submissions for this project.');
+        setForbiddenError('Security Notice: Only the verified creator of this opportunity can review candidate submissions.');
       } else {
         showToast(err.message || 'Failed to load applicants.', 'error');
       }
@@ -63,7 +68,7 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
   const handleUpdateStatus = async (appId: number, newStatus: 'SHORTLISTED' | 'ACCEPTED' | 'REJECTED') => {
     if (newStatus === 'ACCEPTED' || newStatus === 'REJECTED') {
       const confirmed = window.confirm(
-        `Are you sure you want to mark this applicant as ${newStatus}? Per production rules, this decision cannot be undone.`
+        `Are you sure you want to mark this applicant as ${newStatus}? Per production rules, this decision finalizes their application.`
       );
       if (!confirmed) return;
     }
@@ -71,239 +76,279 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
     setUpdatingId(appId);
     try {
       await api.updateApplicationStatus(appId, newStatus);
-      showToast(`Applicant status updated to ${newStatus}`, 'success');
-      // Update local state
-      setApplications(prev =>
-        prev.map(a => (a.id === appId ? { ...a, status: newStatus } : a))
-      );
+      showToast(`Applicant status successfully updated to ${newStatus}`, 'success');
+      await fetchApplications();
     } catch (err: any) {
-      showToast(err.message || 'Failed to update status.', 'error');
+      showToast(err.message || 'Failed to update applicant status.', 'error');
     } finally {
       setUpdatingId(null);
     }
   };
 
-  const parsePortfolioLinks = (linksStr?: string): PortfolioLink[] => {
-    if (!linksStr) return [];
+  const parseLinks = (linksRaw?: string): PortfolioLink[] => {
+    if (!linksRaw) return [];
     try {
-      const parsed = JSON.parse(linksStr);
-      if (Array.isArray(parsed)) return parsed;
+      const parsed = JSON.parse(linksRaw);
+      return Array.isArray(parsed) ? parsed : [];
     } catch {
-      // maybe raw URLs separated by newline or commas
-      return linksStr.split('\n').filter(Boolean).map(u => ({ label: 'Portfolio Link', url: u.trim() }));
+      return [];
     }
-    return [];
   };
 
-  if (forbiddenError) {
-    return (
-      <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
-        <div className="w-16 h-16 mx-auto rounded-2xl bg-rose-950/60 border border-rose-800 flex items-center justify-center text-rose-400">
-          <ShieldAlert className="w-8 h-8" />
-        </div>
-        <h2 className="text-xl font-bold font-serif text-white">403 Forbidden · IDOR Protected</h2>
-        <p className="text-sm text-slate-300 leading-relaxed">{forbiddenError}</p>
-        <p className="text-xs text-slate-500">
-          To review applicants, please switch to the creator account in the top Demo Bar.
-        </p>
-        <button
-          onClick={onBack}
-          className="px-4 py-2 rounded-lg bg-cinema-800 text-cinema-gold text-xs font-semibold"
-        >
-          Return to Dashboard
-        </button>
-      </div>
-    );
-  }
+  const filteredApplications = applications.filter(app => {
+    if (statusFilter === 'ALL') return true;
+    return app.status === statusFilter;
+  });
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Header */}
-      <button
-        onClick={onBack}
-        className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-cinema-gold transition"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span>Back to My Opportunities</span>
-      </button>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      {/* Back button */}
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-xs font-mono font-semibold text-zinc-400 hover:text-amber-400 transition"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>BACK TO MY CREATED OPPORTUNITIES</span>
+        </button>
 
-      <div className="bg-cinema-900 border border-cinema-800 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-cinema-gold font-semibold mb-1">
-            <Users className="w-4 h-4" />
-            <span>Applicant Review Pipeline</span>
-          </div>
-          <h1 className="text-2xl font-bold font-serif text-white">
-            {opportunity?.title || 'Review Applicants'}
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Casting Role: <strong className="text-slate-200">{opportunity?.roleNeeded}</strong> ·{' '}
-            {applications.length} Candidate Submissions
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {opportunity && <StatusBadge status={opportunity.status} />}
+        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>Director Candidate Pipeline</span>
         </div>
       </div>
 
-      {/* Applicant Cards List */}
-      {loading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="h-44 bg-cinema-900/40 rounded-2xl border border-cinema-800 animate-pulse" />
-          ))}
+      {forbiddenError ? (
+        <div className="p-8 rounded-3xl bg-rose-500/10 border border-rose-500/30 text-rose-200 max-w-xl mx-auto text-center space-y-4">
+          <ShieldAlert className="w-12 h-12 text-rose-400 mx-auto" />
+          <h2 className="text-xl font-bold font-display text-white">IDOR Privacy Protection Active</h2>
+          <p className="text-xs text-rose-300 font-sans leading-relaxed">{forbiddenError}</p>
+          <button
+            onClick={onBack}
+            className="px-6 py-2.5 rounded-xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider"
+          >
+            Return to Safety
+          </button>
         </div>
-      ) : applications.length === 0 ? (
-        <EmptyState
-          title="No applications received yet"
-          description="Candidates will appear here as soon as they discover your listing and apply."
-          icon={<Users className="w-7 h-7 text-cinema-gold" />}
-        />
       ) : (
-        <div className="space-y-5">
-          {applications.map(app => {
-            const profile = app.applicantProfile;
-            const portfolioLinks = parsePortfolioLinks(profile?.portfolioLinks);
-            const isTerminal = app.status === 'ACCEPTED' || app.status === 'REJECTED';
+        <>
+          {/* Header Banner */}
+          <div className="relative rounded-[32px] bg-gradient-to-r from-[#11131e] via-[#0c0d15] to-[#07080d] border border-white/[0.1] p-8 sm:p-10 overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
 
-            return (
-              <div
-                key={app.id}
-                className="bg-cinema-900 border border-cinema-800 rounded-2xl p-6 shadow-md space-y-4 transition hover:border-cinema-750"
-              >
-                {/* Applicant Top Bar */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-cinema-800">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-cinema-gold to-amber-500 text-cinema-950 font-bold text-base flex items-center justify-center shadow">
-                      {(app.applicantName || 'A').charAt(0).toUpperCase()}
-                    </div>
-                    <div>
+            <div className="relative z-10 space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-xs font-bold font-display bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                  Role: {opportunity?.roleNeeded}
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] text-zinc-300 border border-white/10">
+                  {opportunity?.opportunityType.replace(/_/g, ' ')}
+                </span>
+                {opportunity && <StatusBadge status={opportunity.status} size="sm" />}
+              </div>
+
+              <h1 className="text-2xl sm:text-4xl font-extrabold font-display text-white tracking-tight">
+                Review Applicants: {opportunity?.title}
+              </h1>
+
+              <div className="flex items-center gap-4 text-xs font-mono text-zinc-400 pt-2">
+                <span>Total Applications: <strong className="text-white">{applications.length}</strong></span>
+                <span>•</span>
+                <span>Location: {opportunity?.location}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Status Pipeline Filter Tabs */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {['ALL', 'SUBMITTED', 'SHORTLISTED', 'ACCEPTED', 'REJECTED'].map(st => {
+              const count = st === 'ALL' ? applications.length : applications.filter(a => a.status === st).length;
+              return (
+                <button
+                  key={st}
+                  onClick={() => setStatusFilter(st)}
+                  className={`px-4 py-2 rounded-xl text-xs font-display font-semibold transition flex items-center gap-2 ${
+                    statusFilter === st
+                      ? 'bg-amber-400 text-black font-bold shadow-[0_0_15px_rgba(245,158,11,0.35)]'
+                      : 'bg-white/[0.03] text-zinc-300 hover:text-white hover:bg-white/[0.07] border border-white/10'
+                  }`}
+                >
+                  <span>{st === 'ALL' ? 'All Applicants' : st}</span>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${statusFilter === st ? 'bg-black/30 text-black' : 'bg-white/10 text-zinc-400'}`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Submissions List */}
+          {loading ? (
+            <div className="space-y-4">
+              {[1, 2].map(i => (
+                <div key={i} className="h-48 bg-white/[0.02] rounded-3xl border border-white/[0.06] animate-pulse" />
+              ))}
+            </div>
+          ) : filteredApplications.length === 0 ? (
+            <EmptyState
+              title={`No applicants found in "${statusFilter}" state`}
+              description="Candidates who apply for this casting call will appear in your pipeline with full portfolio access."
+              icon={<Users className="w-8 h-8 text-amber-400" />}
+            />
+          ) : (
+            <div className="space-y-6">
+              {filteredApplications.map(app => {
+                const links = parseLinks(app.applicantProfile?.portfolioLinks);
+                const isFinal = app.status === 'ACCEPTED' || app.status === 'REJECTED';
+
+                return (
+                  <div
+                    key={app.id}
+                    className="glass-card rounded-3xl p-7 space-y-6 transition-all"
+                  >
+                    {/* Top Row: Applicant Info & Current Status */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08]">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 text-black flex items-center justify-center font-extrabold text-base shadow-sm">
+                          {(app.applicantName || 'A').charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-lg font-bold font-display text-white">
+                              {app.applicantName || `Applicant #${app.applicantId}`}
+                            </h3>
+                            <span className="text-xs font-mono text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/20">
+                              {app.applicantProfile?.primaryRole || 'Candidate'}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-xs font-mono text-zinc-400 mt-1">
+                            {app.applicantProfile?.experienceYears !== undefined && (
+                              <span>{app.applicantProfile.experienceYears} Years Experience</span>
+                            )}
+                            {app.applicantProfile?.location && (
+                              <>
+                                <span>•</span>
+                                <span>{app.applicantProfile.location}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="flex items-center gap-2">
-                        <h3 className="text-base font-bold text-white">{app.applicantName}</h3>
-                        {profile?.primaryRole && (
-                          <span className="px-2 py-0.5 rounded text-[11px] bg-cinema-800 text-cinema-gold font-medium">
-                            {profile.primaryRole}
-                          </span>
+                        <StatusBadge status={app.status} />
+                      </div>
+                    </div>
+
+                    {/* Bio & Skills */}
+                    {app.applicantProfile && (
+                      <div className="space-y-3 text-xs">
+                        {app.applicantProfile.bio && (
+                          <p className="text-zinc-300 font-sans leading-relaxed italic bg-white/[0.02] p-3.5 rounded-2xl border border-white/[0.05]">
+                            "{app.applicantProfile.bio}"
+                          </p>
+                        )}
+                        {app.applicantProfile.skills && (
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="font-mono text-zinc-500 uppercase text-[10px]">Skills:</span>
+                            {app.applicantProfile.skills.split(',').map((s, idx) => (
+                              <span key={idx} className="px-2 py-0.5 rounded-md bg-white/[0.04] text-zinc-300 font-mono text-[11px] border border-white/10">
+                                {s.trim()}
+                              </span>
+                            ))}
+                          </div>
                         )}
                       </div>
-                      <div className="text-xs text-slate-400 mt-0.5">
-                        {profile?.location && <span>{profile.location} · </span>}
-                        <span>{profile?.experienceYears ?? 0} years experience</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500 hidden sm:inline">Status:</span>
-                    <StatusBadge status={app.status} />
-                  </div>
-                </div>
-
-                {/* Cover Message */}
-                {app.coverMessage && (
-                  <div className="bg-cinema-850/80 rounded-xl p-3.5 border border-cinema-800 text-xs">
-                    <div className="flex items-center gap-1.5 text-cinema-gold font-semibold mb-1">
-                      <MessageSquare className="w-3.5 h-3.5" />
-                      <span>Applicant Statement / Note:</span>
-                    </div>
-                    <p className="text-slate-300 leading-relaxed italic">
-                      "{app.coverMessage}"
-                    </p>
-                  </div>
-                )}
-
-                {/* Profile Details & Skills */}
-                {profile && (
-                  <div className="text-xs space-y-2 text-slate-300">
-                    {profile.bio && (
-                      <p className="text-slate-400 leading-relaxed line-clamp-2">
-                        <strong className="text-slate-300">Bio:</strong> {profile.bio}
-                      </p>
                     )}
 
-                    {profile.skills && (
-                      <div className="flex items-center gap-2 flex-wrap pt-1">
-                        <span className="text-slate-500 font-semibold">Skills & Equipment:</span>
-                        {profile.skills.split(',').map((skill, idx) => (
-                          <span
-                            key={idx}
-                            className="px-2 py-0.5 rounded bg-cinema-800 text-slate-300 border border-cinema-750 text-[11px]"
-                          >
-                            {skill.trim()}
-                          </span>
-                        ))}
+                    {/* Audition Note / Cover Message */}
+                    {app.coverMessage && (
+                      <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/15 text-xs text-zinc-300 font-sans">
+                        <div className="font-display font-bold text-amber-300 text-xs mb-1 flex items-center gap-1.5">
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>Candidate's Audition Note:</span>
+                        </div>
+                        <p className="leading-relaxed">{app.coverMessage}</p>
                       </div>
                     )}
-                  </div>
-                )}
 
-                {/* Portfolio URLs */}
-                {portfolioLinks.length > 0 && (
-                  <div className="pt-2 flex items-center gap-2 flex-wrap text-xs">
-                    <span className="text-slate-500 font-semibold">Verified Links:</span>
-                    {portfolioLinks.map((link, idx) => (
-                      <a
-                        key={idx}
-                        href={link.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cinema-800/80 hover:bg-cinema-750 text-cinema-gold border border-cinema-700/60 transition"
-                      >
-                        <span>{link.label || link.url}</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    ))}
-                  </div>
-                )}
+                    {/* Showreel / Portfolio Links */}
+                    {links.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold flex items-center gap-1.5">
+                          <Video className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Verified Showreel Proofs</span>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                          {links.map((link, idx) => (
+                            <a
+                              key={idx}
+                              href={link.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/10 flex items-center justify-between gap-2 text-xs font-mono text-zinc-300 hover:text-amber-300 transition"
+                            >
+                              <span className="truncate font-semibold">{link.label}</span>
+                              <ExternalLink className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-                {/* Decision Action Toolbar */}
-                <div className="pt-4 border-t border-cinema-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                  <div className="flex items-center gap-1.5 text-slate-500">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>Applied on {new Date(app.submittedAt).toLocaleDateString()}</span>
-                  </div>
+                    {/* Status Action Buttons */}
+                    <div className="pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+                      <div className="text-[11px] font-mono text-zinc-500">
+                        Submitted: {new Date(app.submittedAt).toLocaleDateString()}
+                      </div>
 
-                  <div className="flex items-center gap-2">
-                    {isTerminal ? (
-                      <span className="text-slate-500 italic text-[11px]">
-                        Terminal decision reached ({app.status})
-                      </span>
-                    ) : (
-                      <>
+                      <div className="flex items-center gap-2">
                         {app.status === 'SUBMITTED' && (
                           <button
                             onClick={() => handleUpdateStatus(app.id, 'SHORTLISTED')}
                             disabled={updatingId === app.id}
-                            className="px-3 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 border border-amber-700/80 text-amber-300 font-semibold transition"
+                            className="px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-display font-semibold transition"
                           >
-                            Shortlist
+                            Mark Shortlisted
                           </button>
                         )}
-                        <button
-                          onClick={() => handleUpdateStatus(app.id, 'ACCEPTED')}
-                          disabled={updatingId === app.id}
-                          className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition flex items-center gap-1 shadow-sm"
-                        >
-                          <CheckCircle className="w-3.5 h-3.5" />
-                          <span>Accept</span>
-                        </button>
-                        <button
-                          onClick={() => handleUpdateStatus(app.id, 'REJECTED')}
-                          disabled={updatingId === app.id}
-                          className="px-3 py-1.5 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-800/80 text-rose-300 font-semibold transition flex items-center gap-1"
-                        >
-                          <XCircle className="w-3.5 h-3.5" />
-                          <span>Reject</span>
-                        </button>
-                      </>
-                    )}
+
+                        {!isFinal && (
+                          <>
+                            <button
+                              onClick={() => handleUpdateStatus(app.id, 'ACCEPTED')}
+                              disabled={updatingId === app.id}
+                              className="px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-display font-bold transition flex items-center gap-1.5"
+                            >
+                              <CheckCircle className="w-3.5 h-3.5" />
+                              <span>Accept Candidate</span>
+                            </button>
+
+                            <button
+                              onClick={() => handleUpdateStatus(app.id, 'REJECTED')}
+                              disabled={updatingId === app.id}
+                              className="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-display font-semibold transition flex items-center gap-1.5"
+                            >
+                              <XCircle className="w-3.5 h-3.5" />
+                              <span>Decline</span>
+                            </button>
+                          </>
+                        )}
+
+                        {isFinal && (
+                          <span className="text-xs font-mono text-zinc-500 italic">
+                            Decision Finalized
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

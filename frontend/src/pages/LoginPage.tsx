@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-import { Clapperboard, LogIn, Sparkles, AlertCircle } from 'lucide-react';
+import { Clapperboard, LogIn, Sparkles, AlertCircle, UserCheck, Film, ArrowRight } from 'lucide-react';
 
 interface LoginPageProps {
   onSuccess: () => void;
@@ -47,44 +47,56 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-12">
-      <div className="bg-cinema-900 border border-cinema-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-        <div className="text-center mb-6">
-          <div className="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-tr from-amber-600 via-cinema-gold to-yellow-300 p-0.5 shadow-lg shadow-amber-900/30 mb-3">
-            <div className="w-full h-full bg-cinema-950 rounded-[14px] flex items-center justify-center">
-              <Clapperboard className="w-6 h-6 text-cinema-gold" />
+    <div className="max-w-md mx-auto px-4 py-16">
+      <div className="relative rounded-[36px] bg-gradient-to-b from-[#11131e] via-[#0c0d15] to-[#07080d] border border-white/[0.1] p-8 sm:p-10 shadow-2xl overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+
+        {/* Brand Header */}
+        <div className="text-center mb-8 relative z-10">
+          <div className="w-14 h-14 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 via-amber-500 to-amber-600 p-1 shadow-[0_0_25px_rgba(245,158,11,0.35)] mb-4">
+            <div className="w-full h-full bg-[#07080c] rounded-[20px] flex items-center justify-center">
+              <Clapperboard className="w-6 h-6 text-amber-400" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold font-serif text-white">Sign In to Filmin</h1>
-          <p className="text-xs text-slate-400 mt-1">Access your applications, listings, and talent portfolio</p>
+          <h1 className="text-3xl font-extrabold font-display text-white tracking-tight">
+            Sign In to Filmin
+          </h1>
+          <p className="text-xs text-zinc-400 mt-1.5 font-sans">
+            Access verified film castings, production pipelines, and portfolios
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email Address</label>
+            <label className="block text-xs font-semibold font-display text-zinc-300 mb-1.5">
+              Email Address
+            </label>
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="e.g. aditi@filmin.demo"
-              className="w-full bg-cinema-950 border border-cinema-800 focus:border-cinema-gold rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition"
+              className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Password</label>
+            <label className="block text-xs font-semibold font-display text-zinc-300 mb-1.5">
+              Password
+            </label>
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-cinema-950 border border-cinema-800 focus:border-cinema-gold rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition"
+              className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition font-mono"
             />
           </div>
 
           {error && (
-            <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-800/80 text-rose-200 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
@@ -92,46 +104,59 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-cinema-gold hover:bg-amber-400 text-cinema-950 font-bold text-sm transition shadow-lg shadow-amber-950/40 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-2xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
           >
-            <LogIn className="w-4 h-4" />
-            <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
+            {loading ? (
+              <span>Authenticating...</span>
+            ) : (
+              <>
+                <LogIn className="w-4 h-4" />
+                <span>Sign In</span>
+              </>
+            )}
           </button>
         </form>
 
-        {/* Quick Demo Autofill Buttons */}
-        <div className="mt-6 pt-6 border-t border-cinema-800/80">
-          <div className="flex items-center gap-1.5 text-[11px] font-bold text-cinema-gold uppercase tracking-wider mb-2.5">
-            <Sparkles className="w-3.5 h-3.5 text-cinema-amber" />
-            <span>1-Click Demo Credentials:</span>
+        {/* Quick Demo Logins (Tharun Speaks sandbox style) */}
+        <div className="pt-6 mt-6 border-t border-white/[0.08] relative z-10 space-y-2.5">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold text-center">
+            Instant 1-Click Demo Login:
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => fillDemoAccount('aditi@filmin.demo')}
-              className="px-2.5 py-1.5 rounded-lg bg-cinema-850 hover:bg-cinema-800 border border-cinema-750 text-left text-xs transition"
+              className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-left transition group"
             >
-              <div className="font-semibold text-white">Aditi (Talent)</div>
-              <div className="text-[10px] text-slate-400">aditi@filmin.demo</div>
+              <div className="flex items-center gap-1.5 text-xs font-bold font-display text-white group-hover:text-amber-400">
+                <UserCheck className="w-3.5 h-3.5 text-amber-400" />
+                <span>Aditi Rao</span>
+              </div>
+              <div className="text-[10px] font-mono text-zinc-500">Talent / Actress</div>
             </button>
 
             <button
               type="button"
               onClick={() => fillDemoAccount('vikram@filmin.demo')}
-              className="px-2.5 py-1.5 rounded-lg bg-cinema-850 hover:bg-cinema-800 border border-cinema-750 text-left text-xs transition"
+              className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-left transition group"
             >
-              <div className="font-semibold text-white">Vikram (Director)</div>
-              <div className="text-[10px] text-slate-400">vikram@filmin.demo</div>
+              <div className="flex items-center gap-1.5 text-xs font-bold font-display text-white group-hover:text-amber-400">
+                <Film className="w-3.5 h-3.5 text-amber-400" />
+                <span>Vikram M.</span>
+              </div>
+              <div className="text-[10px] font-mono text-zinc-500">Director / Producer</div>
             </button>
           </div>
         </div>
 
-        <div className="text-center mt-6 text-xs text-slate-400">
-          Don't have an account yet?{' '}
+        {/* Register Link */}
+        <div className="pt-6 mt-4 text-center text-xs text-zinc-400 relative z-10">
+          <span>New to the network? </span>
           <button
+            type="button"
             onClick={onNavigateToRegister}
-            className="text-cinema-gold hover:underline font-semibold"
+            className="text-amber-400 hover:text-amber-300 font-bold font-display underline ml-1"
           >
             Create an Account
           </button>

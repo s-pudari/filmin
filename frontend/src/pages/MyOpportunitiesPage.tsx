@@ -5,7 +5,20 @@ import { useNotification } from '../context/NotificationContext';
 import { api } from '../services/api';
 import { StatusBadge } from '../components/StatusBadge';
 import { EmptyState } from '../components/EmptyState';
-import { Briefcase, Users, PlusCircle, ExternalLink, ToggleLeft, ToggleRight, Calendar, MapPin } from 'lucide-react';
+import {
+  Briefcase,
+  Users,
+  PlusCircle,
+  ExternalLink,
+  ToggleLeft,
+  ToggleRight,
+  Calendar,
+  MapPin,
+  Clock,
+  Sparkles,
+  Clapperboard,
+  ArrowRight
+} from 'lucide-react';
 
 interface MyOpportunitiesPageProps {
   onNavigateToPost: () => void;
@@ -43,42 +56,75 @@ export const MyOpportunitiesPage: React.FC<MyOpportunitiesPageProps> = ({
     const nextStatus = opp.status === 'OPEN' ? 'CLOSED' : 'OPEN';
     try {
       await api.updateOpportunityStatus(opp.id, nextStatus);
-      showToast(`Listing marked as ${nextStatus}`, 'success');
+      showToast(`Listing status updated to ${nextStatus}`, 'success');
       fetchMyOpportunities();
     } catch (err: any) {
       showToast(err.message || 'Failed to update status.', 'error');
     }
   };
 
+  const totalApplicants = opportunities.reduce((acc, curr) => acc + (curr.applicantCount || 0), 0);
+  const activeCount = opportunities.filter(o => o.status === 'OPEN').length;
+
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-cinema-800">
-        <div>
-          <h1 className="text-2xl font-bold font-serif text-white">My Created Opportunities</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Manage your project listings, track candidate submissions, and review applicant reels
-          </p>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      {/* Header with Stats */}
+      <div className="relative rounded-[32px] bg-gradient-to-r from-[#11131e] via-[#0c0d15] to-[#07080d] border border-white/[0.1] p-8 sm:p-10 overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px] font-mono font-semibold">
+              <Briefcase className="w-3.5 h-3.5" />
+              <span>Director & Producer Dashboard</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold font-display text-white">
+              My Created Opportunities
+            </h1>
+            <p className="text-xs sm:text-sm text-zinc-400 font-sans max-w-xl">
+              Manage your casting calls, monitor candidate submissions, and review portfolios in your pipeline.
+            </p>
+          </div>
+
+          <button
+            onClick={onNavigateToPost}
+            className="px-6 py-3.5 rounded-2xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto shrink-0"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Post New Opportunity</span>
+          </button>
         </div>
-        <button
-          onClick={onNavigateToPost}
-          className="px-4 py-2.5 rounded-xl bg-cinema-gold hover:bg-amber-400 text-cinema-950 font-bold text-xs transition flex items-center gap-2 shadow-md shadow-amber-950/30 self-start sm:self-auto"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>Post New Opportunity</span>
-        </button>
+
+        {/* Metrics Row */}
+        <div className="grid grid-cols-3 gap-4 pt-8 mt-8 border-t border-white/[0.08]">
+          <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
+            <div className="text-2xl font-extrabold font-display text-white">{opportunities.length}</div>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Total Listings</div>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
+            <div className="text-2xl font-extrabold font-display text-amber-400">{activeCount}</div>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Open For Auditions</div>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
+            <div className="text-2xl font-extrabold font-display text-cyan-400">{totalApplicants}</div>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Total Applications</div>
+          </div>
+        </div>
       </div>
 
+      {/* Listings List */}
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-32 bg-cinema-900/40 rounded-2xl border border-cinema-800 animate-pulse" />
+            <div key={i} className="h-32 bg-white/[0.02] rounded-3xl border border-white/[0.06] animate-pulse" />
           ))}
         </div>
       ) : opportunities.length === 0 ? (
         <EmptyState
-          title="You haven't posted any opportunities yet"
-          description="Post casting calls or crew requirements to begin receiving applications from actors, cinematographers, and editors."
-          icon={<Briefcase className="w-7 h-7 text-cinema-gold" />}
+          title="No opportunities created yet"
+          description="Publish your first casting call or crew requirement to start receiving candidate showreels and applications."
+          icon={<Briefcase className="w-8 h-8 text-amber-400" />}
           action={{
             label: "Create First Opportunity",
             onClick: onNavigateToPost
@@ -86,73 +132,79 @@ export const MyOpportunitiesPage: React.FC<MyOpportunitiesPageProps> = ({
         />
       ) : (
         <div className="space-y-4">
-          {opportunities.map(opp => (
-            <div
-              key={opp.id}
-              className="bg-cinema-900 border border-cinema-800 hover:border-cinema-700/80 rounded-2xl p-6 transition flex flex-col md:flex-row md:items-center justify-between gap-6"
-            >
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-cinema-800 text-cinema-gold border border-cinema-700/60">
-                    {opp.roleNeeded}
-                  </span>
-                  <StatusBadge status={opp.status} size="sm" />
-                  <span className="text-xs text-slate-400 border-l border-cinema-800 pl-2">
-                    {opp.opportunityType.replace(/_/g, ' ')}
-                  </span>
+          {opportunities.map(opp => {
+            const isExpired = new Date(opp.deadline).getTime() < new Date().setHours(0, 0, 0, 0);
+
+            return (
+              <div
+                key={opp.id}
+                className="glass-card rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-5 transition-all"
+              >
+                <div className="space-y-2 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-3 py-0.5 rounded-full text-xs font-bold font-display bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                      {opp.roleNeeded}
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-white/[0.04] text-zinc-400 border border-white/10">
+                      {opp.opportunityType.replace(/_/g, ' ')}
+                    </span>
+                    <StatusBadge status={isExpired ? 'CLOSED' : opp.status} size="sm" />
+                  </div>
+
+                  <h3
+                    onClick={() => onSelectOpportunity(opp)}
+                    className="text-lg font-bold font-display text-white hover:text-amber-300 cursor-pointer transition"
+                  >
+                    {opp.title}
+                  </h3>
+
+                  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-zinc-400 pt-1">
+                    <span className="flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-zinc-500" />
+                      {opp.location}
+                    </span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                      Deadline: {opp.deadline}
+                    </span>
+                  </div>
                 </div>
 
-                <h3
-                  onClick={() => onSelectOpportunity(opp)}
-                  className="text-lg font-bold text-white hover:text-cinema-gold cursor-pointer transition font-serif"
-                >
-                  {opp.title}
-                </h3>
+                <div className="flex items-center flex-wrap gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-white/[0.06]">
+                  {/* Status toggle */}
+                  <button
+                    onClick={() => toggleStatus(opp)}
+                    className="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-mono text-zinc-300 transition flex items-center gap-2"
+                  >
+                    {opp.status === 'OPEN' ? (
+                      <>
+                        <ToggleRight className="w-4 h-4 text-emerald-400" />
+                        <span>Active</span>
+                      </>
+                    ) : (
+                      <>
+                        <ToggleLeft className="w-4 h-4 text-zinc-500" />
+                        <span>Closed</span>
+                      </>
+                    )}
+                  </button>
 
-                <div className="flex items-center gap-4 text-xs text-slate-400">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-slate-500" />
-                    {opp.location}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-slate-500" />
-                    Deadline: {opp.deadline}
-                  </span>
+                  {/* Review Applicants CTA */}
+                  <button
+                    onClick={() => onNavigateToReview(opp.id)}
+                    className="px-5 py-2 rounded-xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider flex items-center gap-2"
+                  >
+                    <Users className="w-3.5 h-3.5" />
+                    <span>Review Applicants</span>
+                    <span className="px-1.5 py-0.2 rounded-full bg-black/30 text-[10px] font-mono">
+                      {opp.applicantCount || 0}
+                    </span>
+                  </button>
                 </div>
               </div>
-
-              {/* Actions & Applicant Counter */}
-              <div className="flex items-center gap-3 pt-4 md:pt-0 border-t md:border-t-0 border-cinema-800 shrink-0">
-                <button
-                  onClick={() => onNavigateToReview(opp.id)}
-                  className="px-4 py-2 rounded-xl bg-cinema-gold/15 hover:bg-cinema-gold/25 border border-cinema-gold/30 text-cinema-gold font-bold text-xs transition flex items-center gap-2"
-                >
-                  <Users className="w-4 h-4" />
-                  <span>Review Applicants ({opp.applicantCount || 0})</span>
-                </button>
-
-                <button
-                  onClick={() => toggleStatus(opp)}
-                  className={`px-3 py-2 rounded-xl border text-xs font-medium transition flex items-center gap-1.5 ${
-                    opp.status === 'OPEN'
-                      ? 'border-rose-900/60 bg-rose-950/30 text-rose-300 hover:bg-rose-950/60'
-                      : 'border-emerald-900/60 bg-emerald-950/30 text-emerald-300 hover:bg-emerald-950/60'
-                  }`}
-                  title={opp.status === 'OPEN' ? 'Close applications' : 'Reopen applications'}
-                >
-                  {opp.status === 'OPEN' ? 'Close' : 'Reopen'}
-                </button>
-
-                <button
-                  onClick={() => onSelectOpportunity(opp)}
-                  className="p-2 rounded-xl bg-cinema-850 hover:bg-cinema-800 border border-cinema-750 text-slate-300 hover:text-white transition"
-                  title="View Public Listing"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

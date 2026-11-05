@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Clapperboard, PlusCircle, Briefcase, FileCheck, User as UserIcon, Menu, X, LogIn } from 'lucide-react';
+import { Clapperboard, PlusCircle, Briefcase, FileCheck, User as UserIcon, Menu, X, LogIn, Sparkles, ChevronRight } from 'lucide-react';
 
 interface NavbarProps {
   currentPage: string;
@@ -19,40 +19,53 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
           onNavigate(page);
           setMobileMenuOpen(false);
         }}
-        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition ${
+        className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold font-display tracking-wide transition-all duration-200 ${
           isActive
-            ? 'bg-cinema-800 text-cinema-gold border border-cinema-700/60 shadow-sm'
-            : 'text-slate-300 hover:text-white hover:bg-cinema-850'
+            ? 'text-amber-400 bg-amber-500/10 border border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.15)]'
+            : 'text-zinc-300 hover:text-white hover:bg-white/[0.05] border border-transparent'
         }`}
       >
         {icon}
         <span>{label}</span>
+        {isActive && (
+          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-amber-400 rounded-full shadow-[0_0_8px_#f59e0b]" />
+        )}
       </button>
     );
   };
 
   return (
-    <nav className="bg-cinema-900/90 border-b border-cinema-800/80 sticky top-[41px] z-40 backdrop-blur-md">
+    <nav className="bg-[#07080c]/80 border-b border-white/[0.08] sticky top-[37px] z-40 backdrop-blur-2xl transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate('explore')}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 via-cinema-gold to-yellow-300 p-0.5 shadow-lg shadow-amber-900/20">
-              <div className="w-full h-full bg-cinema-950 rounded-[10px] flex items-center justify-center">
-                <Clapperboard className="w-5 h-5 text-cinema-gold" />
+          {/* Brand Logo */}
+          <div
+            className="flex items-center gap-3 cursor-pointer group"
+            onClick={() => onNavigate('explore')}
+          >
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 p-0.5 shadow-[0_0_20px_rgba(245,158,11,0.3)] group-hover:scale-105 transition-transform duration-300">
+              <div className="w-full h-full bg-[#07080c] rounded-[14px] flex items-center justify-center">
+                <Clapperboard className="w-5 h-5 text-amber-400 group-hover:rotate-6 transition-transform" />
               </div>
             </div>
             <div>
-              <span className="text-xl font-bold font-serif tracking-wider text-white">FILMIN</span>
-              <span className="hidden sm:inline-block text-[11px] uppercase tracking-widest text-slate-400 ml-2 font-mono border-l border-cinema-700 pl-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xl font-extrabold font-display tracking-tight text-white group-hover:text-amber-400 transition-colors">
+                  FILMIN
+                </span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-400/10 text-amber-400 border border-amber-400/20">
+                  PRO
+                </span>
+              </div>
+              <span className="hidden sm:block text-[10px] font-mono tracking-widest uppercase text-zinc-500">
                 Talent Meets Cinema
               </span>
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1.5">
-            {navItem('explore', 'Explore', <Clapperboard className="w-4 h-4" />)}
+          <div className="hidden md:flex items-center gap-1 bg-white/[0.03] p-1.5 rounded-2xl border border-white/[0.06]">
+            {navItem('explore', 'Explore Cast & Crew', <Clapperboard className="w-4 h-4" />)}
             {user && navItem('create-opportunity', 'Post Opportunity', <PlusCircle className="w-4 h-4" />)}
             {user && navItem('my-applications', 'My Applications', <FileCheck className="w-4 h-4" />)}
             {user && navItem('my-opportunities', 'My Opportunities', <Briefcase className="w-4 h-4" />)}
@@ -60,36 +73,45 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
 
           {/* User Actions */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Live Indicator pill */}
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono font-medium">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+              </span>
+              <span>Auditions Live</span>
+            </div>
+
             {user ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => onNavigate('profile')}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm transition ${
+                  className={`flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border text-xs font-display font-semibold transition-all duration-200 ${
                     currentPage === 'profile'
-                      ? 'border-cinema-gold bg-cinema-800 text-cinema-gold'
-                      : 'border-cinema-700/80 bg-cinema-850 hover:bg-cinema-800 text-slate-200'
+                      ? 'border-amber-400/60 bg-amber-500/10 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                      : 'border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200'
                   }`}
                 >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-cinema-gold to-amber-500 text-cinema-950 flex items-center justify-center font-bold text-xs">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 text-black flex items-center justify-center font-bold text-xs shadow-sm">
                     {(profile?.displayName || user.email).charAt(0).toUpperCase()}
                   </div>
-                  <span className="font-medium max-w-[120px] truncate">
+                  <span className="max-w-[120px] truncate">
                     {profile?.displayName || user.email.split('@')[0]}
                   </span>
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <button
                   onClick={() => onNavigate('login')}
-                  className="px-3.5 py-1.5 rounded-lg text-sm font-medium text-slate-200 hover:text-white hover:bg-cinema-800 transition flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold font-display text-zinc-300 hover:text-white hover:bg-white/[0.06] transition flex items-center gap-1.5"
                 >
-                  <LogIn className="w-4 h-4" />
+                  <LogIn className="w-3.5 h-3.5" />
                   <span>Sign In</span>
                 </button>
                 <button
                   onClick={() => onNavigate('register')}
-                  className="px-4 py-1.5 rounded-lg text-sm font-semibold bg-gradient-to-r from-amber-500 to-cinema-gold text-cinema-950 hover:brightness-110 transition shadow-md shadow-amber-950/40"
+                  className="px-4 py-2 rounded-xl text-xs font-bold font-display btn-glow-gold tracking-wide transition"
                 >
                   Join Filmin
                 </button>
@@ -98,41 +120,65 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
           </div>
 
           {/* Mobile hamburger */}
-          <div className="md:hidden flex items-center">
+          <div className="flex md:hidden items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-cinema-800"
+              className="p-2 rounded-xl bg-white/[0.05] border border-white/10 text-zinc-300 hover:text-white"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu dropdown */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-cinema-800 bg-cinema-900 px-4 pt-2 pb-4 space-y-1">
-          {navItem('explore', 'Explore Opportunities', <Clapperboard className="w-4 h-4" />)}
+        <div className="md:hidden border-b border-white/10 bg-[#07080c]/95 backdrop-blur-2xl px-4 py-4 space-y-2 animate-in slide-in-from-top-2">
+          {navItem('explore', 'Explore Cast & Crew', <Clapperboard className="w-4 h-4" />)}
           {user && navItem('create-opportunity', 'Post Opportunity', <PlusCircle className="w-4 h-4" />)}
           {user && navItem('my-applications', 'My Applications', <FileCheck className="w-4 h-4" />)}
           {user && navItem('my-opportunities', 'My Opportunities', <Briefcase className="w-4 h-4" />)}
-          {user && navItem('profile', 'My Profile', <UserIcon className="w-4 h-4" />)}
-          {!user && (
-            <div className="pt-2 border-t border-cinema-800 flex gap-2">
+
+          <div className="pt-3 mt-3 border-t border-white/10 flex flex-col gap-2">
+            {user ? (
               <button
-                onClick={() => { onNavigate('login'); setMobileMenuOpen(false); }}
-                className="flex-1 py-2 rounded-lg text-sm text-center bg-cinema-800 text-white font-medium"
+                onClick={() => {
+                  onNavigate('profile');
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-between p-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-xs font-semibold text-white"
               >
-                Sign In
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-amber-400 text-black flex items-center justify-center font-bold text-xs">
+                    {(profile?.displayName || user.email).charAt(0).toUpperCase()}
+                  </div>
+                  <span>{profile?.displayName || user.email}</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-zinc-500" />
               </button>
-              <button
-                onClick={() => { onNavigate('register'); setMobileMenuOpen(false); }}
-                className="flex-1 py-2 rounded-lg text-sm text-center bg-cinema-gold text-cinema-950 font-bold"
-              >
-                Join Filmin
-              </button>
-            </div>
-          )}
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    onNavigate('login');
+                    setMobileMenuOpen(false);
+                  }}
+                  className="px-3 py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs font-semibold text-white text-center"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => {
+                    onNavigate('register');
+                    setMobileMenuOpen(false);
+                  }}
+                  className="px-3 py-2 rounded-xl btn-glow-gold text-xs font-bold text-center"
+                >
+                  Join Filmin
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </nav>

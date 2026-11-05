@@ -7,28 +7,68 @@ interface StatusBadgeProps {
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' }) => {
   const s = status.toUpperCase();
-  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-xs font-semibold';
+  const sizeClasses = size === 'sm' ? 'px-2.5 py-0.5 text-[11px]' : 'px-3 py-1 text-xs font-semibold';
 
-  let colors = 'bg-slate-800 text-slate-300 border-slate-700';
+  let config = {
+    badge: 'bg-zinc-800/80 text-zinc-300 border-zinc-700/60',
+    dot: 'bg-zinc-400',
+    pulse: false,
+    label: s
+  };
 
   if (s === 'OPEN') {
-    colors = 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60';
+    config = {
+      badge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]',
+      dot: 'bg-emerald-400',
+      pulse: true,
+      label: 'Open for Applications'
+    };
   } else if (s === 'CLOSED') {
-    colors = 'bg-slate-900 text-slate-400 border-slate-800';
+    config = {
+      badge: 'bg-zinc-900/90 text-zinc-400 border-zinc-800',
+      dot: 'bg-zinc-500',
+      pulse: false,
+      label: 'Closed'
+    };
   } else if (s === 'SUBMITTED') {
-    colors = 'bg-sky-950/80 text-sky-300 border-sky-700/60';
+    config = {
+      badge: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30 shadow-[0_0_12px_rgba(6,182,212,0.15)]',
+      dot: 'bg-cyan-400',
+      pulse: true,
+      label: 'Submitted'
+    };
   } else if (s === 'SHORTLISTED') {
-    colors = 'bg-amber-950/80 text-amber-300 border-amber-700/60';
+    config = {
+      badge: 'bg-amber-500/10 text-amber-300 border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.2)]',
+      dot: 'bg-amber-400',
+      pulse: true,
+      label: 'Shortlisted'
+    };
   } else if (s === 'ACCEPTED') {
-    colors = 'bg-emerald-950/90 text-emerald-200 border-emerald-500/80 font-bold';
+    config = {
+      badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/60 font-bold shadow-[0_0_15px_rgba(16,185,129,0.25)]',
+      dot: 'bg-emerald-300',
+      pulse: false,
+      label: 'Accepted'
+    };
   } else if (s === 'REJECTED') {
-    colors = 'bg-rose-950/80 text-rose-300 border-rose-800/60';
+    config = {
+      badge: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
+      dot: 'bg-rose-400',
+      pulse: false,
+      label: 'Not Selected'
+    };
   }
 
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border ${sizeClasses} ${colors}`}>
-      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70"></span>
-      {s}
+    <span className={`inline-flex items-center gap-1.5 rounded-full border backdrop-blur-md ${sizeClasses} ${config.badge}`}>
+      <span className="relative flex h-2 w-2">
+        {config.pulse && (
+          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${config.dot}`} />
+        )}
+        <span className={`relative inline-flex rounded-full h-2 w-2 ${config.dot}`} />
+      </span>
+      <span className="font-mono tracking-wide">{config.label}</span>
     </span>
   );
 };

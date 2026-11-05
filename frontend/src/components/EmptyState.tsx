@@ -18,22 +18,26 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   action
 }) => {
   return (
-    <div className="text-center py-16 px-4 bg-cinema-900/40 rounded-2xl border border-cinema-800/60 max-w-lg mx-auto my-8">
-      <div className="w-14 h-14 mx-auto rounded-2xl bg-cinema-800/80 border border-cinema-700/60 flex items-center justify-center text-cinema-gold mb-4 shadow-inner">
-        {icon || <Film className="w-7 h-7 opacity-80" />}
+    <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-b from-white/[0.03] to-transparent p-12 text-center backdrop-blur-md">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+      
+      <div className="relative z-10 max-w-md mx-auto flex flex-col items-center">
+        <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center mb-5 shadow-inner">
+          {icon || <Film className="w-8 h-8 text-amber-400" />}
+        </div>
+        
+        <h3 className="text-xl font-bold font-display text-white mb-2">{title}</h3>
+        <p className="text-zinc-400 text-sm leading-relaxed mb-6">{description}</p>
+        
+        {action && (
+          <button
+            onClick={action.onClick}
+            className="px-6 py-2.5 rounded-xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider"
+          >
+            {action.label}
+          </button>
+        )}
       </div>
-      <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
-      <p className="text-slate-400 text-sm max-w-sm mx-auto mb-6 leading-relaxed">
-        {description}
-      </p>
-      {action && (
-        <button
-          onClick={action.onClick}
-          className="px-4 py-2 rounded-lg bg-cinema-800 hover:bg-cinema-750 text-cinema-gold font-semibold text-sm border border-cinema-700/80 transition shadow-sm"
-        >
-          {action.label}
-        </button>
-      )}
     </div>
   );
 };

@@ -8,7 +8,7 @@ export const ToastContainer: React.FC = () => {
   if (notifications.length === 0) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-md w-full px-4 pointer-events-none">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-full px-4 pointer-events-none">
       {notifications.map(n => (
         <ToastItem key={n.id} notification={n} onClose={() => removeToast(n.id)} />
       ))}
@@ -24,30 +24,32 @@ const ToastItem: React.FC<{ notification: Notification; onClose: () => void }> =
     success: <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />,
     error: <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />,
     warning: <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />,
-    info: <Info className="w-5 h-5 text-sky-400 shrink-0" />
+    info: <Info className="w-5 h-5 text-cyan-400 shrink-0" />
   };
 
   const borders = {
-    success: 'border-emerald-500/30 bg-cinema-900/95',
-    error: 'border-rose-500/30 bg-cinema-900/95',
-    warning: 'border-amber-500/30 bg-cinema-900/95',
-    info: 'border-sky-500/30 bg-cinema-900/95'
+    success: 'border-emerald-500/30 bg-[#090b11]/95 text-emerald-300 shadow-[0_10px_30px_rgba(16,185,129,0.15)]',
+    error: 'border-rose-500/30 bg-[#090b11]/95 text-rose-300 shadow-[0_10px_30px_rgba(244,63,94,0.15)]',
+    warning: 'border-amber-500/30 bg-[#090b11]/95 text-amber-300 shadow-[0_10px_30px_rgba(245,158,11,0.15)]',
+    info: 'border-cyan-500/30 bg-[#090b11]/95 text-cyan-300 shadow-[0_10px_30px_rgba(6,182,212,0.15)]'
   };
 
   return (
     <div
-      className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-xl backdrop-blur-md transition-all duration-300 animate-in slide-in-from-bottom-2 ${borders[notification.type]}`}
+      className={`pointer-events-auto flex items-start gap-3.5 p-4 rounded-2xl border backdrop-blur-xl transition-all duration-300 animate-in slide-in-from-bottom-3 ${borders[notification.type]}`}
     >
-      {icons[notification.type]}
-      <div className="flex-1 text-sm">
+      <div className="p-1 rounded-lg bg-white/[0.04] mt-0.5">
+        {icons[notification.type]}
+      </div>
+      <div className="flex-1 text-xs">
         {notification.title && (
-          <h4 className="font-semibold text-white mb-0.5">{notification.title}</h4>
+          <h4 className="font-bold text-white text-sm mb-0.5 tracking-tight font-display">{notification.title}</h4>
         )}
-        <p className="text-slate-300 leading-snug">{notification.message}</p>
+        <p className="text-zinc-300 leading-relaxed font-sans">{notification.message}</p>
       </div>
       <button
         onClick={onClose}
-        className="p-1 rounded text-slate-400 hover:text-white transition"
+        className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition shrink-0"
       >
         <X className="w-4 h-4" />
       </button>
