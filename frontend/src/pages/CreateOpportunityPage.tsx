@@ -122,35 +122,32 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Top Bar */}
-      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+      <div className="flex items-center justify-between pb-4 border-b border-slate-200">
         <button
           onClick={onCancel}
-          className="flex items-center gap-2 text-xs font-mono font-semibold text-zinc-400 hover:text-amber-400 transition"
+          className="flex items-center gap-2 text-xs font-mono font-semibold text-slate-500 hover:text-emerald-700 transition"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>CANCEL & RETURN</span>
         </button>
 
-        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="flex items-center gap-2 text-xs font-mono text-slate-500">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>Live Creator Publisher</span>
         </div>
       </div>
 
       {/* Hero Header */}
-      <div className="relative rounded-[32px] bg-gradient-to-r from-[#11131e] via-[#0c0d15] to-[#07080d] border border-white/[0.1] p-8 sm:p-10 overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
-
+      <div className="relative rounded-2xl bg-white border border-slate-200/90 p-8 sm:p-10 shadow-card">
         <div className="relative z-10 space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px] font-mono font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-mono font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
             <span>Recruit Verified Cinema Talent</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold font-display text-white">
+          <h1 className="text-3xl sm:text-4xl font-extrabold font-display text-slate-900">
             Publish a Production Requirement
           </h1>
-          <p className="text-xs sm:text-sm text-zinc-400 font-sans max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-600 font-sans max-w-2xl">
             Post casting calls or crew requirements. Review candidate showreels and track candidate pipeline in real-time.
           </p>
         </div>
@@ -160,14 +157,14 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Form (7 cols) */}
         <div className="lg:col-span-7">
-          <form onSubmit={handleSubmit} className="glass-card rounded-3xl p-8 space-y-6">
-            <h2 className="text-xl font-bold font-display text-white pb-3 border-b border-white/[0.08]">
+          <form onSubmit={handleSubmit} className="feed-card p-8 space-y-6 shadow-card">
+            <h2 className="text-xl font-bold font-display text-slate-900 pb-3 border-b border-slate-100">
               Project Specifications
             </h2>
 
             {/* Project Title */}
             <div>
-              <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+              <label className="block text-xs font-semibold font-display text-slate-700 mb-2">
                 Project Title *
               </label>
               <input
@@ -175,18 +172,18 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 placeholder="e.g. The Silent Echo (Indie Psychological Thriller)"
-                className={`w-full bg-[#07080c] border rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition ${
-                  fieldErrors.title ? 'border-rose-500 focus:border-rose-400' : 'border-white/10 focus:border-amber-400'
+                className={`w-full bg-white border rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition ${
+                  fieldErrors.title ? 'border-rose-500 focus:border-rose-600' : 'border-slate-200 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
                 }`}
               />
               {fieldErrors.title && (
-                <p className="text-[11px] font-mono text-rose-400 mt-1">{fieldErrors.title}</p>
+                <p className="text-[11px] font-mono text-rose-600 mt-1">{fieldErrors.title}</p>
               )}
             </div>
 
             {/* Production Format */}
             <div>
-              <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+              <label className="block text-xs font-semibold font-display text-slate-700 mb-2">
                 Production Format *
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -195,10 +192,10 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
                     key={opt.value}
                     type="button"
                     onClick={() => setOpportunityType(opt.value)}
-                    className={`px-3 py-2.5 rounded-xl text-xs font-display font-semibold transition text-left ${
+                    className={`px-3 py-2 rounded-xl text-xs font-display font-semibold transition text-left ${
                       opportunityType === opt.value
-                        ? 'bg-amber-400 text-black font-bold shadow-[0_0_12px_rgba(245,158,11,0.3)]'
-                        : 'bg-white/[0.04] text-zinc-300 hover:text-white hover:bg-white/[0.08] border border-white/10'
+                        ? 'bg-emerald-600 text-white font-bold shadow-xs'
+                        : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200'
                     }`}
                   >
                     {opt.label}
@@ -209,7 +206,7 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
 
             {/* Role Needed */}
             <div>
-              <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+              <label className="block text-xs font-semibold font-display text-slate-700 mb-2">
                 Key Role / Craft Position *
               </label>
               <input
@@ -217,23 +214,23 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
                 value={roleNeeded}
                 onChange={e => setRoleNeeded(e.target.value)}
                 placeholder="e.g. Video Editor / Cinematographer / Lead Actress"
-                className={`w-full bg-[#07080c] border rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition ${
-                  fieldErrors.roleNeeded ? 'border-rose-500 focus:border-rose-400' : 'border-white/10 focus:border-amber-400'
+                className={`w-full bg-white border rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition ${
+                  fieldErrors.roleNeeded ? 'border-rose-500 focus:border-rose-600' : 'border-slate-200 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
                 }`}
               />
               {fieldErrors.roleNeeded && (
-                <p className="text-[11px] font-mono text-rose-400 mt-1">{fieldErrors.roleNeeded}</p>
+                <p className="text-[11px] font-mono text-rose-600 mt-1">{fieldErrors.roleNeeded}</p>
               )}
 
               {/* Quick Role Suggestions */}
-              <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
-                <span className="text-[10px] font-mono uppercase text-zinc-500">Quick Pick:</span>
+              <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                <span className="text-[10px] font-mono uppercase text-slate-400">Quick Pick:</span>
                 {roleSuggestions.slice(0, 6).map(r => (
                   <button
                     key={r}
                     type="button"
                     onClick={() => setRoleNeeded(r)}
-                    className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-zinc-400 hover:text-amber-300 transition"
+                    className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 hover:text-emerald-700 transition"
                   >
                     {r}
                   </button>
@@ -244,7 +241,7 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
             {/* Location & Deadline */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+                <label className="block text-xs font-semibold font-display text-slate-700 mb-2">
                   Shoot Location / Region *
                 </label>
                 <input
@@ -252,17 +249,17 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
                   value={location}
                   onChange={e => setLocation(e.target.value)}
                   placeholder="e.g. Mumbai / Bangalore / Hybrid"
-                  className={`w-full bg-[#07080c] border rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition ${
-                    fieldErrors.location ? 'border-rose-500 focus:border-rose-400' : 'border-white/10 focus:border-amber-400'
+                  className={`w-full bg-white border rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition ${
+                    fieldErrors.location ? 'border-rose-500 focus:border-rose-600' : 'border-slate-200 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
                   }`}
                 />
                 {fieldErrors.location && (
-                  <p className="text-[11px] font-mono text-rose-400 mt-1">{fieldErrors.location}</p>
+                  <p className="text-[11px] font-mono text-rose-600 mt-1">{fieldErrors.location}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+                <label className="block text-xs font-semibold font-display text-slate-700 mb-2">
                   Application Deadline *
                 </label>
                 <input
@@ -270,19 +267,19 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
                   min={todayStr}
                   value={deadline}
                   onChange={e => setDeadline(e.target.value)}
-                  className={`w-full bg-[#07080c] border rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition ${
-                    fieldErrors.deadline ? 'border-rose-500 focus:border-rose-400' : 'border-white/10 focus:border-amber-400'
+                  className={`w-full bg-white border rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition ${
+                    fieldErrors.deadline ? 'border-rose-500 focus:border-rose-600' : 'border-slate-200 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
                   }`}
                 />
                 {fieldErrors.deadline && (
-                  <p className="text-[11px] font-mono text-rose-400 mt-1">{fieldErrors.deadline}</p>
+                  <p className="text-[11px] font-mono text-rose-600 mt-1">{fieldErrors.deadline}</p>
                 )}
               </div>
             </div>
 
             {/* Description */}
             <div>
-              <label className="block text-xs font-semibold font-display text-zinc-300 mb-2">
+              <label className="block text-xs font-semibold font-display text-slate-700 mb-2">
                 Production Brief & Candidate Requirements *
               </label>
               <textarea
@@ -290,28 +287,28 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
                 onChange={e => setDescription(e.target.value)}
                 rows={5}
                 placeholder="Detail character specs, shooting dates, NLE / camera gear expectations, narrative themes, and compensation details..."
-                className={`w-full bg-[#07080c] border rounded-2xl p-4 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition font-sans ${
-                  fieldErrors.description ? 'border-rose-500 focus:border-rose-400' : 'border-white/10 focus:border-amber-400'
+                className={`w-full bg-white border rounded-xl p-3.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition font-sans ${
+                  fieldErrors.description ? 'border-rose-500 focus:border-rose-600' : 'border-slate-200 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
                 }`}
               />
               {fieldErrors.description && (
-                <p className="text-[11px] font-mono text-rose-400 mt-1">{fieldErrors.description}</p>
+                <p className="text-[11px] font-mono text-rose-600 mt-1">{fieldErrors.description}</p>
               )}
             </div>
 
             {/* Submit Actions */}
-            <div className="pt-4 border-t border-white/[0.08] flex items-center justify-end gap-3">
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
               <button
                 type="button"
                 onClick={onCancel}
-                className="px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 text-xs font-display font-semibold transition"
+                className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-display font-semibold transition"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-8 py-3 rounded-xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider flex items-center gap-2 disabled:opacity-50"
+                className="px-6 py-2.5 rounded-xl btn-brand text-xs font-bold font-display uppercase tracking-wider flex items-center gap-2 disabled:opacity-50"
               >
                 {loading ? (
                   <span>Publishing Listing...</span>
@@ -328,11 +325,11 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
 
         {/* Live Preview (5 cols) */}
         <div className="lg:col-span-5 space-y-4 sticky top-28">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">
-            <Eye className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-700 font-bold">
+            <Eye className="w-4 h-4 text-emerald-600" />
             <span>Real-Time Applicant Preview</span>
           </div>
-          <p className="text-xs text-zinc-400 font-sans">
+          <p className="text-xs text-slate-500 font-sans">
             This is how your opportunity will appear to thousands of cinema professionals on the Explore feed.
           </p>
 
@@ -341,12 +338,12 @@ export const CreateOpportunityPage: React.FC<CreateOpportunityPageProps> = ({
             onSelect={() => {}}
           />
 
-          <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-xs font-mono text-zinc-400 space-y-1.5">
-            <div className="flex items-center gap-2 text-emerald-400 font-bold">
-              <CheckCircle2 className="w-4 h-4" />
+          <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-mono text-slate-600 space-y-1">
+            <div className="flex items-center gap-1.5 text-emerald-800 font-bold">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               <span>Instant Discovery</span>
             </div>
-            <p className="text-zinc-400 font-sans text-xs">
+            <p className="text-slate-600 font-sans text-xs">
               Once published, candidates with matching showreels will immediately receive visibility to apply.
             </p>
           </div>

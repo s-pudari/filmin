@@ -103,29 +103,29 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Back button */}
-      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+      <div className="flex items-center justify-between pb-4 border-b border-slate-200">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-xs font-mono font-semibold text-zinc-400 hover:text-amber-400 transition"
+          className="flex items-center gap-2 text-xs font-mono font-semibold text-slate-500 hover:text-emerald-700 transition"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>BACK TO MY CREATED OPPORTUNITIES</span>
         </button>
 
-        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="flex items-center gap-2 text-xs font-mono text-slate-500">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>Director Candidate Pipeline</span>
         </div>
       </div>
 
       {forbiddenError ? (
-        <div className="p-8 rounded-3xl bg-rose-500/10 border border-rose-500/30 text-rose-200 max-w-xl mx-auto text-center space-y-4">
-          <ShieldAlert className="w-12 h-12 text-rose-400 mx-auto" />
-          <h2 className="text-xl font-bold font-display text-white">IDOR Privacy Protection Active</h2>
-          <p className="text-xs text-rose-300 font-sans leading-relaxed">{forbiddenError}</p>
+        <div className="p-8 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 max-w-xl mx-auto text-center space-y-4">
+          <ShieldAlert className="w-12 h-12 text-rose-600 mx-auto" />
+          <h2 className="text-xl font-bold font-display text-slate-900">IDOR Privacy Protection Active</h2>
+          <p className="text-xs text-rose-700 font-sans leading-relaxed">{forbiddenError}</p>
           <button
             onClick={onBack}
-            className="px-6 py-2.5 rounded-xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider"
+            className="px-6 py-2.5 rounded-xl btn-brand text-xs font-bold font-display uppercase tracking-wider"
           >
             Return to Safety
           </button>
@@ -133,27 +133,24 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
       ) : (
         <>
           {/* Header Banner */}
-          <div className="relative rounded-[32px] bg-gradient-to-r from-[#11131e] via-[#0c0d15] to-[#07080d] border border-white/[0.1] p-8 sm:p-10 overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
-
+          <div className="relative rounded-2xl bg-white border border-slate-200/90 p-8 sm:p-10 shadow-card">
             <div className="relative z-10 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-full text-xs font-bold font-display bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                <span className="px-3 py-1 rounded-full text-xs font-bold font-display bg-emerald-50 text-emerald-800 border border-emerald-200">
                   Role: {opportunity?.roleNeeded}
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] text-zinc-300 border border-white/10">
+                <span className="px-3 py-1 rounded-full text-xs font-mono bg-slate-100 text-slate-700 border border-slate-200">
                   {opportunity?.opportunityType.replace(/_/g, ' ')}
                 </span>
                 {opportunity && <StatusBadge status={opportunity.status} size="sm" />}
               </div>
 
-              <h1 className="text-2xl sm:text-4xl font-extrabold font-display text-white tracking-tight">
+              <h1 className="text-2xl sm:text-4xl font-extrabold font-display text-slate-900 tracking-tight">
                 Review Applicants: {opportunity?.title}
               </h1>
 
-              <div className="flex items-center gap-4 text-xs font-mono text-zinc-400 pt-2">
-                <span>Total Applications: <strong className="text-white">{applications.length}</strong></span>
+              <div className="flex items-center gap-4 text-xs font-mono text-slate-500 pt-2">
+                <span>Total Applications: <strong className="text-slate-900">{applications.length}</strong></span>
                 <span>•</span>
                 <span>Location: {opportunity?.location}</span>
               </div>
@@ -170,12 +167,12 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                   onClick={() => setStatusFilter(st)}
                   className={`px-4 py-2 rounded-xl text-xs font-display font-semibold transition flex items-center gap-2 ${
                     statusFilter === st
-                      ? 'bg-amber-400 text-black font-bold shadow-[0_0_15px_rgba(245,158,11,0.35)]'
-                      : 'bg-white/[0.03] text-zinc-300 hover:text-white hover:bg-white/[0.07] border border-white/10'
+                      ? 'bg-emerald-600 text-white font-bold shadow-xs'
+                      : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
                   }`}
                 >
                   <span>{st === 'ALL' ? 'All Applicants' : st}</span>
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${statusFilter === st ? 'bg-black/30 text-black' : 'bg-white/10 text-zinc-400'}`}>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${statusFilter === st ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-slate-600'}`}>
                     {count}
                   </span>
                 </button>
@@ -187,17 +184,17 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
           {loading ? (
             <div className="space-y-4">
               {[1, 2].map(i => (
-                <div key={i} className="h-48 bg-white/[0.02] rounded-3xl border border-white/[0.06] animate-pulse" />
+                <div key={i} className="h-48 bg-slate-100 rounded-2xl border border-slate-200 animate-pulse" />
               ))}
             </div>
           ) : filteredApplications.length === 0 ? (
             <EmptyState
               title={`No applicants found in "${statusFilter}" state`}
               description="Candidates who apply for this casting call will appear in your pipeline with full portfolio access."
-              icon={<Users className="w-8 h-8 text-amber-400" />}
+              icon={<Users className="w-8 h-8 text-emerald-600" />}
             />
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-5">
               {filteredApplications.map(app => {
                 const links = parseLinks(app.applicantProfile?.portfolioLinks);
                 const isFinal = app.status === 'ACCEPTED' || app.status === 'REJECTED';
@@ -205,24 +202,24 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                 return (
                   <div
                     key={app.id}
-                    className="glass-card rounded-3xl p-7 space-y-6 transition-all"
+                    className="feed-card p-7 space-y-5 shadow-card"
                   >
                     {/* Top Row: Applicant Info & Current Status */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08]">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 text-black flex items-center justify-center font-extrabold text-base shadow-sm">
+                        <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-base shadow-xs">
                           {(app.applicantName || 'A').charAt(0).toUpperCase()}
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <h3 className="text-lg font-bold font-display text-white">
+                            <h3 className="text-lg font-bold font-display text-slate-900">
                               {app.applicantName || `Applicant #${app.applicantId}`}
                             </h3>
-                            <span className="text-xs font-mono text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/20">
+                            <span className="text-xs font-mono text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-semibold">
                               {app.applicantProfile?.primaryRole || 'Candidate'}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3 text-xs font-mono text-zinc-400 mt-1">
+                          <div className="flex items-center gap-3 text-xs font-mono text-slate-500 mt-1">
                             {app.applicantProfile?.experienceYears !== undefined && (
                               <span>{app.applicantProfile.experienceYears} Years Experience</span>
                             )}
@@ -245,15 +242,15 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                     {app.applicantProfile && (
                       <div className="space-y-3 text-xs">
                         {app.applicantProfile.bio && (
-                          <p className="text-zinc-300 font-sans leading-relaxed italic bg-white/[0.02] p-3.5 rounded-2xl border border-white/[0.05]">
+                          <p className="text-slate-700 font-sans leading-relaxed italic bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                             "{app.applicantProfile.bio}"
                           </p>
                         )}
                         {app.applicantProfile.skills && (
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="font-mono text-zinc-500 uppercase text-[10px]">Skills:</span>
+                            <span className="font-mono text-slate-400 uppercase text-[10px]">Skills:</span>
                             {app.applicantProfile.skills.split(',').map((s, idx) => (
-                              <span key={idx} className="px-2 py-0.5 rounded-md bg-white/[0.04] text-zinc-300 font-mono text-[11px] border border-white/10">
+                              <span key={idx} className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono text-[11px] border border-slate-200">
                                 {s.trim()}
                               </span>
                             ))}
@@ -264,9 +261,9 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
 
                     {/* Audition Note / Cover Message */}
                     {app.coverMessage && (
-                      <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/15 text-xs text-zinc-300 font-sans">
-                        <div className="font-display font-bold text-amber-300 text-xs mb-1 flex items-center gap-1.5">
-                          <MessageSquare className="w-3.5 h-3.5" />
+                      <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 text-xs text-slate-700 font-sans">
+                        <div className="font-display font-bold text-emerald-800 text-xs mb-1 flex items-center gap-1.5">
+                          <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
                           <span>Candidate's Audition Note:</span>
                         </div>
                         <p className="leading-relaxed">{app.coverMessage}</p>
@@ -276,8 +273,8 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                     {/* Showreel / Portfolio Links */}
                     {links.length > 0 && (
                       <div className="space-y-2">
-                        <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold flex items-center gap-1.5">
-                          <Video className="w-3.5 h-3.5 text-amber-400" />
+                        <div className="text-[11px] font-mono uppercase tracking-wider text-slate-500 font-semibold flex items-center gap-1.5">
+                          <Video className="w-3.5 h-3.5 text-emerald-600" />
                           <span>Verified Showreel Proofs</span>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -287,10 +284,10 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                               href={link.url}
                               target="_blank"
                               rel="noreferrer"
-                              className="p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/10 flex items-center justify-between gap-2 text-xs font-mono text-zinc-300 hover:text-amber-300 transition"
+                              className="p-3 rounded-xl bg-slate-50 hover:bg-emerald-50/50 border border-slate-200 hover:border-emerald-300 flex items-center justify-between gap-2 text-xs font-mono text-slate-700 hover:text-emerald-700 transition"
                             >
                               <span className="truncate font-semibold">{link.label}</span>
-                              <ExternalLink className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
+                              <ExternalLink className="w-3.5 h-3.5 shrink-0 text-slate-400" />
                             </a>
                           ))}
                         </div>
@@ -298,8 +295,8 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                     )}
 
                     {/* Status Action Buttons */}
-                    <div className="pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
-                      <div className="text-[11px] font-mono text-zinc-500">
+                    <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                      <div className="text-[11px] font-mono text-slate-400">
                         Submitted: {new Date(app.submittedAt).toLocaleDateString()}
                       </div>
 
@@ -308,7 +305,7 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                           <button
                             onClick={() => handleUpdateStatus(app.id, 'SHORTLISTED')}
                             disabled={updatingId === app.id}
-                            className="px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-display font-semibold transition"
+                            className="px-4 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-display font-semibold transition"
                           >
                             Mark Shortlisted
                           </button>
@@ -319,7 +316,7 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                             <button
                               onClick={() => handleUpdateStatus(app.id, 'ACCEPTED')}
                               disabled={updatingId === app.id}
-                              className="px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-display font-bold transition flex items-center gap-1.5"
+                              className="px-4 py-2 rounded-xl btn-brand text-xs font-display font-bold transition flex items-center gap-1.5 shadow-xs"
                             >
                               <CheckCircle className="w-3.5 h-3.5" />
                               <span>Accept Candidate</span>
@@ -328,7 +325,7 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                             <button
                               onClick={() => handleUpdateStatus(app.id, 'REJECTED')}
                               disabled={updatingId === app.id}
-                              className="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-display font-semibold transition flex items-center gap-1.5"
+                              className="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-display font-semibold transition flex items-center gap-1.5"
                             >
                               <XCircle className="w-3.5 h-3.5" />
                               <span>Decline</span>
@@ -337,7 +334,7 @@ export const ApplicantReviewPage: React.FC<ApplicantReviewPageProps> = ({
                         )}
 
                         {isFinal && (
-                          <span className="text-xs font-mono text-zinc-500 italic">
+                          <span className="text-xs font-mono text-slate-400 italic">
                             Decision Finalized
                           </span>
                         )}

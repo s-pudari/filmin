@@ -55,28 +55,26 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
 
   return (
     <div className="max-w-md mx-auto px-4 py-16">
-      <div className="relative rounded-[36px] bg-gradient-to-b from-[#11131e] via-[#0c0d15] to-[#07080d] border border-white/[0.1] p-8 sm:p-10 shadow-2xl overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+      <div className="relative rounded-[28px] bg-white border border-slate-200/90 p-8 sm:p-10 shadow-xl overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400" />
 
         {/* Brand Header */}
         <div className="text-center mb-8 relative z-10">
-          <div className="w-14 h-14 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 via-amber-500 to-amber-600 p-1 shadow-[0_0_25px_rgba(245,158,11,0.35)] mb-4">
-            <div className="w-full h-full bg-[#07080c] rounded-[20px] flex items-center justify-center">
-              <Clapperboard className="w-6 h-6 text-amber-400" />
-            </div>
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mb-4 shadow-sm">
+            <Clapperboard className="w-7 h-7 text-emerald-600" />
           </div>
-          <h1 className="text-3xl font-extrabold font-display text-white tracking-tight">
+          <h1 className="text-3xl font-extrabold font-display text-slate-900 tracking-tight">
             Join the Network
           </h1>
-          <p className="text-xs text-zinc-400 mt-1.5 font-sans">
+          <p className="text-xs text-slate-500 mt-1.5 font-sans">
             Connect directly with verified directors, showrunners & indie productions
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
           <div>
-            <label className="block text-xs font-semibold font-display text-zinc-300 mb-1.5">
+            <label className="block text-xs font-semibold font-display text-slate-700 mb-1.5">
               Email Address
             </label>
             <input
@@ -84,12 +82,12 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="e.g. yourname@cinema.pro"
-              className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition"
+              className="w-full bg-white border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold font-display text-zinc-300 mb-1.5">
+            <label className="block text-xs font-semibold font-display text-slate-700 mb-1.5">
               Password (min. 6 characters)
             </label>
             <input
@@ -97,12 +95,12 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition font-mono"
+              className="w-full bg-white border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold font-display text-zinc-300 mb-1.5">
+            <label className="block text-xs font-semibold font-display text-slate-700 mb-1.5">
               Confirm Password
             </label>
             <input
@@ -110,13 +108,13 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-[#07080c] border border-white/10 focus:border-amber-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none transition font-mono"
+              className="w-full bg-white border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition font-mono"
             />
           </div>
 
           {error && (
-            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
               <span>{error}</span>
             </div>
           )}
@@ -124,7 +122,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-2xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+            className="btn-brand w-full py-3.5 text-xs uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50 mt-2 shadow-sm"
           >
             {loading ? (
               <span>Creating Account...</span>
@@ -138,24 +136,24 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
         </form>
 
         {/* Benefits bullets */}
-        <div className="pt-6 mt-6 border-t border-white/[0.08] relative z-10 space-y-2 text-xs font-mono text-zinc-400">
+        <div className="pt-6 mt-6 border-t border-slate-100 relative z-10 space-y-2 text-xs font-mono text-slate-600">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
             <span>Dual-Role: Apply for roles & post requirements</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
             <span>Link Vimeo, YouTube, & IMDb showreels</span>
           </div>
         </div>
 
         {/* Login Link */}
-        <div className="pt-6 mt-4 text-center text-xs text-zinc-400 relative z-10">
+        <div className="pt-6 mt-4 text-center text-xs text-slate-500 relative z-10">
           <span>Already registered on Filmin? </span>
           <button
             type="button"
             onClick={onNavigateToLogin}
-            className="text-amber-400 hover:text-amber-300 font-bold font-display underline ml-1"
+            className="text-emerald-700 hover:text-emerald-800 font-bold font-display underline ml-1"
           >
             Sign In here
           </button>

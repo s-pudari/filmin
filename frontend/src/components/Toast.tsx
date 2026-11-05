@@ -21,35 +21,35 @@ const ToastItem: React.FC<{ notification: Notification; onClose: () => void }> =
   onClose
 }) => {
   const icons = {
-    success: <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />,
-    error: <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />,
-    warning: <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />,
-    info: <Info className="w-5 h-5 text-cyan-400 shrink-0" />
+    success: <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />,
+    error: <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />,
+    warning: <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />,
+    info: <Info className="w-5 h-5 text-blue-600 shrink-0" />
   };
 
-  const borders = {
-    success: 'border-emerald-500/30 bg-[#090b11]/95 text-emerald-300 shadow-[0_10px_30px_rgba(16,185,129,0.15)]',
-    error: 'border-rose-500/30 bg-[#090b11]/95 text-rose-300 shadow-[0_10px_30px_rgba(244,63,94,0.15)]',
-    warning: 'border-amber-500/30 bg-[#090b11]/95 text-amber-300 shadow-[0_10px_30px_rgba(245,158,11,0.15)]',
-    info: 'border-cyan-500/30 bg-[#090b11]/95 text-cyan-300 shadow-[0_10px_30px_rgba(6,182,212,0.15)]'
+  const styles = {
+    success: 'border-emerald-200 bg-white text-emerald-900 shadow-lg',
+    error: 'border-rose-200 bg-white text-rose-900 shadow-lg',
+    warning: 'border-amber-200 bg-white text-amber-900 shadow-lg',
+    info: 'border-blue-200 bg-white text-blue-900 shadow-lg'
   };
 
   return (
     <div
-      className={`pointer-events-auto flex items-start gap-3.5 p-4 rounded-2xl border backdrop-blur-xl transition-all duration-300 animate-in slide-in-from-bottom-3 ${borders[notification.type]}`}
+      className={`pointer-events-auto flex items-start gap-3.5 p-4 rounded-xl border backdrop-blur-md transition-all duration-200 animate-in slide-in-from-bottom-3 ${styles[notification.type]}`}
     >
-      <div className="p-1 rounded-lg bg-white/[0.04] mt-0.5">
+      <div className="mt-0.5">
         {icons[notification.type]}
       </div>
       <div className="flex-1 text-xs">
         {notification.title && (
-          <h4 className="font-bold text-white text-sm mb-0.5 tracking-tight font-display">{notification.title}</h4>
+          <h4 className="font-bold text-slate-900 text-sm mb-0.5 tracking-tight font-display">{notification.title}</h4>
         )}
-        <p className="text-zinc-300 leading-relaxed font-sans">{notification.message}</p>
+        <p className="text-slate-600 leading-relaxed font-sans">{notification.message}</p>
       </div>
       <button
         onClick={onClose}
-        className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition shrink-0"
+        className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition shrink-0"
       >
         <X className="w-4 h-4" />
       </button>

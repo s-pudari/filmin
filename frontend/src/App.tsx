@@ -39,7 +39,7 @@ const MainApp: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#050508] text-slate-100 font-sans selection:bg-amber-500 selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-800 font-sans selection:bg-emerald-500 selection:text-white">
       <DemoAccountBar />
       <Navbar currentPage={currentPage} onNavigate={handleNavigate} />
 

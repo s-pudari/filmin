@@ -51,49 +51,45 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-in fade-in duration-200">
-      <div className="bg-[#0b0c13] border border-white/[0.12] rounded-3xl max-w-lg w-full p-7 sm:p-8 shadow-2xl relative overflow-hidden">
-        {/* Top edge light */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
-        <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white border border-slate-200 rounded-2xl max-w-lg w-full p-7 sm:p-8 shadow-2xl relative overflow-hidden">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.08] transition"
+          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
         <div className="mb-6">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px] font-mono font-semibold mb-3">
-            <Sparkles className="w-3 h-3" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-mono font-semibold mb-3">
+            <Sparkles className="w-3.5 h-3.5" />
             <span>Audition & Submission</span>
           </div>
-          <h3 className="text-2xl font-extrabold font-display text-white mb-1">
+          <h3 className="text-2xl font-extrabold font-display text-slate-900 mb-1">
             Apply for {opportunity.roleNeeded}
           </h3>
-          <p className="text-xs sm:text-sm text-zinc-400 truncate">
-            Production: <strong className="text-zinc-200">{opportunity.title}</strong>
+          <p className="text-xs sm:text-sm text-slate-500 truncate">
+            Production: <strong className="text-slate-800">{opportunity.title}</strong>
           </p>
         </div>
 
         {isCreator ? (
-          <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs sm:text-sm flex items-start gap-3.5 mb-4">
-            <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs sm:text-sm flex items-start gap-3 mb-4">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
             <div>
-              <p className="font-bold text-white mb-1 font-display">Creator Rule Active</p>
-              <p className="text-xs text-amber-300 leading-relaxed font-sans">
+              <p className="font-bold mb-1 font-display">Creator Rule Active</p>
+              <p className="text-xs text-amber-700 leading-relaxed font-sans">
                 You created this production listing. As the director/producer, you review applicant submissions rather than applying to your own call.
               </p>
             </div>
           </div>
         ) : isProfileIncomplete ? (
-          <div className="p-5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-200 text-xs sm:text-sm flex items-start gap-3.5 mb-4">
-            <UserCheck className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-xs sm:text-sm flex items-start gap-3 mb-4">
+            <UserCheck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
             <div>
-              <p className="font-bold text-white mb-1 font-display">Profile Verification Required</p>
-              <p className="text-xs text-cyan-300 leading-relaxed font-sans mb-3">
+              <p className="font-bold mb-1 font-display">Profile Verification Required</p>
+              <p className="text-xs text-blue-700 leading-relaxed font-sans mb-3">
                 Directors evaluate verified portfolios (showreel links, IMDb credits, experience years) when reviewing applicants.
               </p>
               <button
@@ -101,23 +97,23 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                   onClose();
                   onNavigateToProfile();
                 }}
-                className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold font-display text-xs transition"
+                className="px-4 py-2 rounded-xl btn-brand text-xs font-semibold"
               >
                 Complete Profile Showreel
               </button>
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Applicant Profile Card Preview */}
-            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-between text-xs">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-600 text-black flex items-center justify-center font-bold text-xs shadow-sm">
+                <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
                   {profile?.displayName?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <div className="font-bold text-white font-display text-sm">{profile?.displayName}</div>
-                  <div className="text-[11px] font-mono text-zinc-400">
+                  <div className="font-bold text-slate-900 font-display text-sm">{profile?.displayName}</div>
+                  <div className="text-[11px] font-mono text-slate-500">
                     {profile?.primaryRole} · {profile?.experienceYears || 0} yrs exp
                   </div>
                 </div>
@@ -128,18 +124,18 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                   onClose();
                   onNavigateToProfile();
                 }}
-                className="text-amber-400 hover:text-amber-300 text-xs font-mono underline"
+                className="text-emerald-700 hover:text-emerald-800 text-xs font-mono font-semibold underline"
               >
                 Edit Reel
               </button>
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-semibold font-display text-zinc-300">
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-semibold font-display text-slate-700">
                   Audition Note / Cover Message
                 </label>
-                <span className="text-[11px] font-mono text-zinc-500">
+                <span className="text-[11px] font-mono text-slate-400">
                   {coverMessage.length}/500
                 </span>
               </div>
@@ -148,12 +144,12 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                 onChange={e => setCoverMessage(e.target.value.slice(0, 500))}
                 rows={4}
                 placeholder="Describe your fit for this role, relevant projects, showreel timestamps, or scheduling availability..."
-                className="w-full bg-[#07080c] border border-white/10 rounded-2xl p-4 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 transition resize-none font-sans"
+                className="w-full bg-white border border-slate-200 rounded-xl p-3.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition resize-none font-sans"
               />
             </div>
 
             {error && (
-              <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
@@ -163,14 +159,14 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 text-xs font-display font-semibold transition"
+                className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-display font-semibold transition"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-7 py-3 rounded-xl btn-glow-gold text-xs font-bold font-display uppercase tracking-wider flex items-center gap-2 disabled:opacity-50"
+                className="px-6 py-2.5 rounded-xl btn-brand text-xs font-bold font-display uppercase tracking-wider flex items-center gap-2 disabled:opacity-50"
               >
                 {loading ? (
                   <span>Submitting...</span>
